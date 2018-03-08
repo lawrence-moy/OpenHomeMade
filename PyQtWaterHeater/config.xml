@@ -1,0 +1,8 @@
+<!DOCTYPE Configuration>
+<Config>
+ <Network>
+  <OnRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
+  <OffRequest body="[{'ref':0, 'set_output10':0}]" url="http://192.168.200.99/gtc/appareils.json"/>
+ </Network>
+ <OnOffParameters duration="04:00" hour="20:13"/>
+</Config>
