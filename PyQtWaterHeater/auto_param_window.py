@@ -19,6 +19,12 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.onTime           = None
     self.offTime          = None
     
+  def getXMLConfiguration(self, doc):
+    onOffParamNode = doc.createElement("OnOffParameters")
+    onOffParamNode.setAttribute("hour", self.getSwitchOnTime().time().toString("hh:mm"))
+    onOffParamNode.setAttribute("duration", self.getDurationTime().toString("hh:mm"))
+    return onOffParamNode
+    
   def setupGUI(self):
     labelFont = QtGui.QFont(self.labelStartTime.font())
     labelFont.setPointSize(self.labelFontSize)
@@ -79,6 +85,9 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.duration.setTime(self.durationTime)
     self.processSwitchOffDateTime()
     
+  def getDurationTime(self):
+    return self.duration.time()
+    
   def processSwitchOffDateTime(self):
     tempTime = QtCore.QDateTime(self.onTime)
     self.offTime = tempTime.addSecs((self.durationTime.hour() * 60 * 60) + \
@@ -88,4 +97,5 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.onTime = self.startTime.dateTime()
     self.processSwitchOffDateTime()
     self.hide()
+    self.parent().applyTimeTableParameters()
       

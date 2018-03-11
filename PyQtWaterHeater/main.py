@@ -3,6 +3,7 @@ from PySide import QtCore
 from PySide import QtNetwork
 from PySide import QtXml
 import auto_param_window
+import network_handler
 
 class CumulusManager(QtGui.QWidget):
   def __init__(self):
@@ -22,14 +23,10 @@ class CumulusManager(QtGui.QWidget):
     self.forceOffButton   = QtGui.QPushButton("Forcer \n arret")
     self.configAutoButton = QtGui.QPushButton("Programmation \n horaire")
     self.offTime          = None
-    self.onRequestParam   = (None, None)
-    self.offRequestParam  = (None, None)
+
     self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
-    
-    self.comStateCumulusLabel = QtGui.QLabel("Etat COM Cumulus :")
-    self.comStateCounterLabel = QtGui.QLabel("Etat COM Compteur :")
-    self.comStatePylierLabel  = QtGui.QLabel("Etat COM Pylier :")
-    
+    self.networkHandler   = network_handler.NetworkHandler()
+
     self.totalPowerLabel  = QtGui.QLabel("Puissance cumulee :")
     self.powerLabel       = QtGui.QLabel("Puissance actuelle :")
     
@@ -65,26 +62,11 @@ class CumulusManager(QtGui.QWidget):
       element = n.toElement()
       if not element.isNull():
         if "Network" == element.tagName():
-          self.parseXMLNetworkParameters(element)
+          self.networkHandler.parseXMLParameters(element)
         elif ("OnOffParameters" == element.tagName()):
           self.parseXMLOnOffParameters(element)
       n = n.nextSibling()
       
-  def parseXMLNetworkParameters(self, element):
-    subNetworkNode = element.firstChild()
-    while not subNetworkNode.isNull():
-      subNetworkElement = subNetworkNode.toElement()
-      if not subNetworkElement.isNull():
-        if "OnRequest" == subNetworkElement.tagName():
-           urlOn = subNetworkElement.attribute("url", "")
-           bodyOn = subNetworkElement.attribute("body", "")
-           self.onRequestParam = (urlOn, bodyOn)
-        elif "OffRequest" == subNetworkElement.tagName():
-           urlOff  = subNetworkElement.attribute("url", "")
-           bodyOff = subNetworkElement.attribute("body", "")
-           self.offRequestParam = (urlOff, bodyOff)
-      subNetworkNode = subNetworkNode.nextSibling()
-  
   def parseXMLOnOffParameters(self, element):
     hour = element.attribute("hour", "00:00")
     onTime = QtCore.QDateTime.currentDateTime()
@@ -101,29 +83,16 @@ class CumulusManager(QtGui.QWidget):
     doc = QtXml.QDomDocument("Configuration")
     rootNode = doc.createElement("Config")
 
-    networkNode    = doc.createElement("Network")
-    onRequestNode  = doc.createElement("OnRequest")
-    onRequestNode.setAttribute("url",  self.onRequestParam[0])
-    onRequestNode.setAttribute("body", self.onRequestParam[1])
-    offRequestNode = doc.createElement("OffRequest")
-    offRequestNode.setAttribute("url",  self.offRequestParam[0])
-    offRequestNode.setAttribute("body", self.offRequestParam[1])
-    networkNode.appendChild(onRequestNode)
-    networkNode.appendChild(offRequestNode)
+    networkNode = self.networkHandler.getXMLConfiguration(doc)
     rootNode.appendChild(networkNode)
-    
-    onOffParamNode = doc.createElement("OnOffParameters")
-    onOffParamNode.setAttribute("hour", self.startTime.time().toString("hh:mm"))
-    onOffParamNode.setAttribute("duration", self.duration.time().toString("hh:mm"))
+    onOffParamNode = self.autoCtrlParamWin.getXMLConfiguration(doc)
     rootNode.appendChild(onOffParamNode)
-    
     doc.appendChild(rootNode)
     
     outFile = QtCore.QFile("config.xml")
     if not outFile.open(QtCore.QIODevice.WriteOnly | QtCore.QIODevice.Text ):
       print("Failed to open file for writing.")
       return
-  
     stream = QtCore.QTextStream(outFile)
     stream << doc.toString()
     outFile.close()
@@ -197,30 +166,21 @@ class CumulusManager(QtGui.QWidget):
       self.autoCtrlParamWin.setSwitchOffTime(offTime.addDays(1))
       print("OFF !!!")
       
-  def applyParameters(self):
+  def applyTimeTableParameters(self):
     self.saveXMLConfiguration()
     
-  def sendRequest(self, urlPath, data):
-    manager = QtNetwork.QNetworkAccessManager(self)
-    manager.finished[QtNetwork.QNetworkReply].connect(self.replyFinished)
-    url = QtCore.QUrl(urlPath)
-    request = QtNetwork.QNetworkRequest(url)
-    request.setHeader(QtNetwork.QNetworkRequest.ContentTypeHeader, "application/json")
-    print("POST:", data)
-    manager.post(request, data)
-    
-  def replyFinished(self, reply):
-    print(reply.readAll())
-    
   def forceOnCommand(self):
-    self.sendRequest(self.onRequestParam[0], self.onRequestParam[1])
+    switchOnParam = self.networkHandler.getSwitchOnParameters()
+    url  = switchOnParam[0]
+    body = switchOnParam[1]
+    self.networkHandler.sendRequest(url, body)
 
   def forceOffCommand(self):
-    self.sendRequest(self.offRequestParam[0], self.offRequestParam[1])
+    switchOffParam = self.networkHandler.getSwitchOffParameters()
+    url  = switchOnParam[0]
+    body = switchOnParam[1]
+    self.networkHandler.sendRequest(url, body)
     
-  def generateCommand(self, moduleId, command, value):
-    return '{"ref":' + str(moduleId) + ', "' + command + '":' + str(value) + '}'
-  
 app = QtGui.QApplication([])
 
 cumulusManager = CumulusManager()
