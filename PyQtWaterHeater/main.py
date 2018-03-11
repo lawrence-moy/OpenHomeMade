@@ -1,9 +1,9 @@
 ﻿from PySide import QtGui 
 from PySide import QtCore
-from PySide import QtNetwork
 from PySide import QtXml
 import auto_param_window
 import network_handler
+import request_manager
 
 class CumulusManager(QtGui.QWidget):
   def __init__(self):
@@ -18,14 +18,13 @@ class CumulusManager(QtGui.QWidget):
     self.valueFontSize    = 30
 
     self.labelCurrentTime = QtGui.QLabel("00:00:00")
-    self.validateButton   = QtGui.QPushButton("Valider")
     self.forceOnButton    = QtGui.QPushButton("Forcer \n allumage")
     self.forceOffButton   = QtGui.QPushButton("Forcer \n arret")
     self.configAutoButton = QtGui.QPushButton("Programmation \n horaire")
-    self.offTime          = None
 
     self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
     self.networkHandler   = network_handler.NetworkHandler()
+    self.requestManager   = request_manager.RequestManager(self)
 
     self.totalPowerLabel  = QtGui.QLabel("Puissance cumulee :")
     self.powerLabel       = QtGui.QLabel("Puissance actuelle :")
@@ -46,6 +45,7 @@ class CumulusManager(QtGui.QWidget):
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
+    self.requestManager.init()
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -64,20 +64,8 @@ class CumulusManager(QtGui.QWidget):
         if "Network" == element.tagName():
           self.networkHandler.parseXMLParameters(element)
         elif ("OnOffParameters" == element.tagName()):
-          self.parseXMLOnOffParameters(element)
+          self.autoCtrlParamWin.parseXMLParameters(element)
       n = n.nextSibling()
-      
-  def parseXMLOnOffParameters(self, element):
-    hour = element.attribute("hour", "00:00")
-    onTime = QtCore.QDateTime.currentDateTime()
-    onTime.setTime(QtCore.QTime.fromString(hour, "hh:mm"))
-    print("OnTime: ", onTime.toString())
-    self.autoCtrlParamWin.setSwitchOnTime(onTime)
-    
-    duration = element.attribute("duration", "03:00")
-    print("Duration: ", duration)
-    self.durationTime = QtCore.QTime.fromString(duration, "hh:mm")
-    self.autoCtrlParamWin.setDurationTime(self.durationTime)
       
   def saveXMLConfiguration(self):
     doc = QtXml.QDomDocument("Configuration")
@@ -135,6 +123,12 @@ class CumulusManager(QtGui.QWidget):
     self.setLayout(self.gridLayout)
     self.setFixedSize(QtCore.QSize(800, 480))
 
+  def getAutoControlParametersHandler(self):
+    return self.autoCtrlParamWin
+    
+  def getNetworkHandler(self):
+    return self.networkHandler  
+  
   def openAutoCtrlCfgWindow(self):
     self.autoCtrlParamWin.show()
   
@@ -154,33 +148,18 @@ class CumulusManager(QtGui.QWidget):
     self.updateTimeTimer.start(1000)
     
   def update(self):
-    self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
-    onTime  = self.autoCtrlParamWin.getSwitchOnTime()
-    offTime = self.autoCtrlParamWin.getSwitchOffTime()
-    if (QtCore.QDateTime.currentDateTime().__ge__(onTime) ):
-      self.forceOnCommand()
-      self.autoCtrlParamWin.setSwitchOnTime(onTime.addDays(1))
-      print("ON !!!!")
-    elif (QtCore.QDateTime.currentDateTime().__ge__(offTime) ):
-      self.forceOffCommand()
-      self.autoCtrlParamWin.setSwitchOffTime(offTime.addDays(1))
-      print("OFF !!!")
+    self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))      
+    self.requestManager.processRequest()
       
   def applyTimeTableParameters(self):
     self.saveXMLConfiguration()
     
   def forceOnCommand(self):
-    switchOnParam = self.networkHandler.getSwitchOnParameters()
-    url  = switchOnParam[0]
-    body = switchOnParam[1]
-    self.networkHandler.sendRequest(url, body)
+    self.requestManager.switchOnCommand()
 
   def forceOffCommand(self):
-    switchOffParam = self.networkHandler.getSwitchOffParameters()
-    url  = switchOnParam[0]
-    body = switchOnParam[1]
-    self.networkHandler.sendRequest(url, body)
-    
+    self.requestManager.switchOffCommand()
+
 app = QtGui.QApplication([])
 
 cumulusManager = CumulusManager()

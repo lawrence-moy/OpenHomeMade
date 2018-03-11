@@ -19,6 +19,18 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.onTime           = None
     self.offTime          = None
     
+  def parseXMLParameters(self, element):
+    hour = element.attribute("hour", "00:00")
+    onTime = QtCore.QDateTime.currentDateTime()
+    onTime.setTime(QtCore.QTime.fromString(hour, "hh:mm"))
+    print("OnTime: ", onTime.toString())
+    self.setSwitchOnTime(onTime)
+    
+    duration = element.attribute("duration", "03:00")
+    print("Duration: ", duration)
+    self.durationTime = QtCore.QTime.fromString(duration, "hh:mm")
+    self.setDurationTime(self.durationTime)
+    
   def getXMLConfiguration(self, doc):
     onOffParamNode = doc.createElement("OnOffParameters")
     onOffParamNode.setAttribute("hour", self.getSwitchOnTime().time().toString("hh:mm"))
