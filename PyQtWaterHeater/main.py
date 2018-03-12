@@ -7,6 +7,7 @@ import request_manager
 import electrical_counter_widget
 import temperature_widget
 import delay_widget
+import electric_control_widget
 
 class CumulusManager(QtGui.QWidget):
   def __init__(self):
@@ -21,7 +22,7 @@ class CumulusManager(QtGui.QWidget):
     self.labelCurrentTime = QtGui.QLabel("00:00:00")
     self.forceOnButton    = QtGui.QPushButton("Force ON")
     self.forceOffButton   = QtGui.QPushButton("Force OFF")
-    self.configAutoButton = QtGui.QPushButton("Config")
+    self.configAutoButton = QtGui.QPushButton("Configure")
 
     self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
     self.networkHandler   = network_handler.NetworkHandler()
@@ -30,15 +31,14 @@ class CumulusManager(QtGui.QWidget):
     self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
     self.temperatureWidget       = temperature_widget.TemperatureWidget()
     self.delayWidget             = delay_widget.DelayWidget()
-    
-    self.relayStateLabel  = QtGui.QLabel("Etat du relais :")
-    self.tcStateLabel     = QtGui.QLabel("Etat du TC :")
-    
+    self.electricControlWidget   = electric_control_widget.ElectricControlWidget()
+
   def init(self):
     self.autoCtrlParamWin.init()
     self.electricalCounterWidget.init()
     self.temperatureWidget.init()
     self.delayWidget.init()
+    self.electricControlWidget.init()
     
     self.loadXMLConfiguration()
     self.setupGUI()
@@ -135,10 +135,11 @@ class CumulusManager(QtGui.QWidget):
     self.gridLayout.addWidget(self.labelCurrentTime,  0, 2, 1, 1, QtCore.Qt.AlignRight)
     
     self.gridLayout.addWidget(self.temperatureWidget, 1, 0, 1, 1)
+    self.gridLayout.addWidget(self.delayWidget,       2, 0, 1, 1)
 
     self.gridLayout.addWidget(self.waterHeaterImg,    1, 1, 3, 1, QtCore.Qt.AlignCenter)
     
-    self.gridLayout.addWidget(self.delayWidget,             1, 2, 1, 1)
+    self.gridLayout.addWidget(self.electricControlWidget, 1, 2, 1, 1)
     self.gridLayout.addWidget(self.electricalCounterWidget, 2, 2, 1, 1)
 
     self.gridLayout.addWidget(self.forceOnButton,    4, 0, 1, 1)
