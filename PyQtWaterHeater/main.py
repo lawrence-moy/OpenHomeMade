@@ -4,44 +4,42 @@ from PySide import QtXml
 import auto_param_window
 import network_handler
 import request_manager
+import electrical_counter_widget
+import temperature_widget
+import delay_widget
 
 class CumulusManager(QtGui.QWidget):
   def __init__(self):
     QtGui.QWidget.__init__(self)
     self.gridLayout       = QtGui.QGridLayout()
     self.logoPixmap       = QtGui.QPixmap("cumulus.png")
-    self.logo             = QtGui.QLabel()
-    self.labelTitle       = QtGui.QLabel("Controle chauffe-eau")
+    self.waterHeaterImg   = QtGui.QLabel(self)
+    self.labelTitle       = QtGui.QLabel("Water-heater Manager", self)
 
     self.titleFontSize    = 30
-    self.labelFontSize    = 25
-    self.valueFontSize    = 30
 
     self.labelCurrentTime = QtGui.QLabel("00:00:00")
-    self.forceOnButton    = QtGui.QPushButton("Forcer \n allumage")
-    self.forceOffButton   = QtGui.QPushButton("Forcer \n arret")
-    self.configAutoButton = QtGui.QPushButton("Programmation \n horaire")
+    self.forceOnButton    = QtGui.QPushButton("Force ON")
+    self.forceOffButton   = QtGui.QPushButton("Force OFF")
+    self.configAutoButton = QtGui.QPushButton("Config")
 
     self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
     self.networkHandler   = network_handler.NetworkHandler()
     self.requestManager   = request_manager.RequestManager(self)
 
-    self.totalPowerLabel  = QtGui.QLabel("Puissance cumulee :")
-    self.powerLabel       = QtGui.QLabel("Puissance actuelle :")
+    self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
+    self.temperatureWidget       = temperature_widget.TemperatureWidget()
+    self.delayWidget             = delay_widget.DelayWidget()
     
     self.relayStateLabel  = QtGui.QLabel("Etat du relais :")
     self.tcStateLabel     = QtGui.QLabel("Etat du TC :")
     
-    self.waterTempLabel   = QtGui.QLabel("Temperature eau :")
-    self.ambiaTempLabel   = QtGui.QLabel("Temperature ambiante :")
-    
-    self.autoStateLabel   = QtGui.QLabel("Allumage auto :")
-    self.delayOnLabel     = QtGui.QLabel("Allumage dans :")
-    self.delayOffLabel    = QtGui.QLabel("Arret dans  :")
-    
   def init(self):
-    self.autoCtrlParamWin.setupGUI()
-    self.autoCtrlParamWin.placeWidgets()
+    self.autoCtrlParamWin.init()
+    self.electricalCounterWidget.init()
+    self.temperatureWidget.init()
+    self.delayWidget.init()
+    
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
@@ -86,15 +84,15 @@ class CumulusManager(QtGui.QWidget):
     outFile.close()
     
   def setupGUI(self):
-    self.logo.setPixmap(self.logoPixmap)
+    self.waterHeaterImg.setPixmap(self.logoPixmap)
 
-    labelTitleFont  = QtGui.QFont(self.labelTitle.font())
+    labelTitleFont = QtGui.QFont(self.labelTitle.font())
     labelTitleFont.setPointSize(self.titleFontSize)
     self.labelTitle.setFont(labelTitleFont)
     self.labelTitle.setStyleSheet("font-weight: bold; color: blue")
     
     valueFont = QtGui.QFont(self.labelCurrentTime.font())
-    valueFont.setPointSize(self.valueFontSize)
+    valueFont.setPointSize(self.titleFontSize)
     self.labelCurrentTime.setFont(valueFont)
     self.labelCurrentTime.setAlignment(QtCore.Qt.AlignCenter)
     self.labelCurrentTime.setStyleSheet("font-weight: bold; color: blue")
@@ -133,15 +131,19 @@ class CumulusManager(QtGui.QWidget):
     self.autoCtrlParamWin.show()
   
   def placeWidgets(self):
-    self.gridLayout.addWidget(self.labelTitle,       0, 0, 1, 2)
-    self.gridLayout.addWidget(self.labelCurrentTime, 0, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridLayout.addWidget(self.labelTitle,        0, 0, 1, 2)
+    self.gridLayout.addWidget(self.labelCurrentTime,  0, 2, 1, 1, QtCore.Qt.AlignRight)
     
-    self.gridLayout.addWidget(self.forceOnButton,    1, 0, 1, 1)
-    self.gridLayout.addWidget(self.forceOffButton,   2, 0, 1, 1)
+    self.gridLayout.addWidget(self.temperatureWidget, 1, 0, 1, 1)
 
-    self.gridLayout.addWidget(self.logo,             1, 1, 4, 1, QtCore.Qt.AlignCenter)
+    self.gridLayout.addWidget(self.waterHeaterImg,    1, 1, 3, 1, QtCore.Qt.AlignCenter)
     
-    self.gridLayout.addWidget(self.configAutoButton, 1, 2)
+    self.gridLayout.addWidget(self.delayWidget,             1, 2, 1, 1)
+    self.gridLayout.addWidget(self.electricalCounterWidget, 2, 2, 1, 1)
+
+    self.gridLayout.addWidget(self.forceOnButton,    4, 0, 1, 1)
+    self.gridLayout.addWidget(self.forceOffButton,   4, 1, 1, 1)
+    self.gridLayout.addWidget(self.configAutoButton, 4, 2, 1, 1)
 
     self.updateTimeTimer = QtCore.QTimer()
     QtCore.QObject.connect(self.updateTimeTimer, QtCore.SIGNAL("timeout()"), self.update)

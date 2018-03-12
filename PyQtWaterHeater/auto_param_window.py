@@ -19,6 +19,10 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.onTime           = None
     self.offTime          = None
     
+  def init(self):
+    self.setupGUI()
+    self.placeWidgets()
+    
   def parseXMLParameters(self, element):
     hour = element.attribute("hour", "00:00")
     onTime = QtCore.QDateTime.currentDateTime()
