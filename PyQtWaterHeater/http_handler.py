@@ -1,16 +1,21 @@
-﻿from PySide import QtGui 
-from PySide import QtCore
+﻿from PySide import QtCore
 from PySide import QtNetwork
 from PySide import QtXml
 
-class NetworkHandler(QtCore.QObject):
+class HTTPHandler(QtCore.QObject):
   def __init__(self):
     QtCore.QObject.__init__(self)
     self.onRequestParam   = (None, None)
     self.offRequestParam  = (None, None)
-    self.comStateCumulusLabel = QtGui.QLabel("Etat COM Cumulus :")
-    self.comStateCounterLabel = QtGui.QLabel("Etat COM Compteur :")
-    self.comStatePylierLabel  = QtGui.QLabel("Etat COM Pylier :")
+    
+    self.postManager = QtNetwork.QNetworkAccessManager(self)
+    self.postManager.finished[QtNetwork.QNetworkReply].connect(self.replyPOST)
+    
+    self.getManager = QtNetwork.QNetworkAccessManager(self)
+    self.getManager.finished[QtNetwork.QNetworkReply].connect(self.replyGET)
+    #self.comStateCumulusLabel = QtGui.QLabel("Etat COM Cumulus :")
+    #self.comStateCounterLabel = QtGui.QLabel("Etat COM Compteur :")
+    #self.comStatePylierLabel  = QtGui.QLabel("Etat COM Pylier :")
     
   def setupGUI(self):
     pass
@@ -48,15 +53,22 @@ class NetworkHandler(QtCore.QObject):
   def getSwitchOffParameters(self):
     return self.offRequestParam
     
-  def sendRequest(self, urlPath, data):
-    manager = QtNetwork.QNetworkAccessManager(self)
-    manager.finished[QtNetwork.QNetworkReply].connect(self.replyFinished)
+  def post(self, urlPath, data):
     url = QtCore.QUrl(urlPath)
     request = QtNetwork.QNetworkRequest(url)
     request.setHeader(QtNetwork.QNetworkRequest.ContentTypeHeader, "application/json")
     print("POST:", data)
-    manager.post(request, data)
+    self.postManager.post(request, data)
     
-  def replyFinished(self, reply):
+  def get(self, urlPath):
+    url = QtCore.QUrl(urlPath)
+    request = QtNetwork.QNetworkRequest(url)
+    print("GET:", data)
+    self.postManager.get(request)
+        
+  def replyPOST(self, reply):
+    print(reply.readAll())
+    
+  def replyGET(self, reply):
     print(reply.readAll())
     

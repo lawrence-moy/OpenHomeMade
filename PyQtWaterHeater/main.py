@@ -2,7 +2,7 @@
 from PySide import QtCore
 from PySide import QtXml
 import auto_param_window
-import network_handler
+import http_handler
 import request_manager
 import electrical_counter_widget
 import temperature_widget
@@ -23,9 +23,12 @@ class CumulusManager(QtGui.QWidget):
     self.forceOnButton    = QtGui.QPushButton("Force ON")
     self.forceOffButton   = QtGui.QPushButton("Force OFF")
     self.configAutoButton = QtGui.QPushButton("Configure")
+    
+    self.navRightButton = QtGui.QPushButton(u"\u25b6")
+    self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
 
     self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
-    self.networkHandler   = network_handler.NetworkHandler()
+    self.httpHandler      = http_handler.HTTPHandler()
     self.requestManager   = request_manager.RequestManager(self)
 
     self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
@@ -60,7 +63,7 @@ class CumulusManager(QtGui.QWidget):
       element = n.toElement()
       if not element.isNull():
         if "Network" == element.tagName():
-          self.networkHandler.parseXMLParameters(element)
+          self.httpHandler.parseXMLParameters(element)
         elif ("OnOffParameters" == element.tagName()):
           self.autoCtrlParamWin.parseXMLParameters(element)
       n = n.nextSibling()
@@ -69,7 +72,7 @@ class CumulusManager(QtGui.QWidget):
     doc = QtXml.QDomDocument("Configuration")
     rootNode = doc.createElement("Config")
 
-    networkNode = self.networkHandler.getXMLConfiguration(doc)
+    networkNode = self.httpHandler.getXMLConfiguration(doc)
     rootNode.appendChild(networkNode)
     onOffParamNode = self.autoCtrlParamWin.getXMLConfiguration(doc)
     rootNode.appendChild(onOffParamNode)
@@ -124,34 +127,46 @@ class CumulusManager(QtGui.QWidget):
   def getAutoControlParametersHandler(self):
     return self.autoCtrlParamWin
     
-  def getNetworkHandler(self):
-    return self.networkHandler  
+  def getHTTPHandler(self):
+    return self.httpHandler  
   
   def openAutoCtrlCfgWindow(self):
     self.autoCtrlParamWin.show()
   
   def placeWidgets(self):
-    self.gridLayout.addWidget(self.labelTitle,        0, 0, 1, 2)
-    self.gridLayout.addWidget(self.labelCurrentTime,  0, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridLayout.addWidget(self.labelTitle,              0, 0, 1, 3)
+    self.gridLayout.addWidget(self.labelCurrentTime,        0, 2, 1, 2, QtCore.Qt.AlignRight)
     
-    self.gridLayout.addWidget(self.temperatureWidget, 1, 0, 1, 1)
-    self.gridLayout.addWidget(self.delayWidget,       2, 0, 1, 1)
+    self.navLeftButton.setFixedSize(45, 340)
+    arrowFont = QtGui.QFont(self.navLeftButton.font())
+    arrowFont.setPointSize(40)
+    self.navLeftButton.setFont(arrowFont)
+    self.gridLayout.addWidget(self.navLeftButton,           1, 0, 3, 1)
 
-    self.gridLayout.addWidget(self.waterHeaterImg,    1, 1, 3, 1, QtCore.Qt.AlignCenter)
+    self.gridLayout.addWidget(self.temperatureWidget,       1, 1, 1, 1)
+    self.gridLayout.addWidget(self.delayWidget,             2, 1, 1, 1)
+
+    self.gridLayout.addWidget(self.waterHeaterImg,          1, 2, 3, 1, QtCore.Qt.AlignCenter)
     
-    self.gridLayout.addWidget(self.electricControlWidget, 1, 2, 1, 1)
-    self.gridLayout.addWidget(self.electricalCounterWidget, 2, 2, 1, 1)
+    self.gridLayout.addWidget(self.electricControlWidget,   1, 3, 1, 1)
+    self.gridLayout.addWidget(self.electricalCounterWidget, 2, 3, 1, 1)
+    
+    self.navRightButton.setFixedSize(45, 340)
+    arrowFont = QtGui.QFont(self.navRightButton.font())
+    arrowFont.setPointSize(40)
+    self.navRightButton.setFont(arrowFont)
+    self.gridLayout.addWidget(self.navRightButton,          1, 4, 3, 1)
 
-    self.gridLayout.addWidget(self.forceOnButton,    4, 0, 1, 1)
-    self.gridLayout.addWidget(self.forceOffButton,   4, 1, 1, 1)
-    self.gridLayout.addWidget(self.configAutoButton, 4, 2, 1, 1)
+    self.gridLayout.addWidget(self.forceOnButton,           4, 1, 1, 1)
+    self.gridLayout.addWidget(self.forceOffButton,          4, 2, 1, 1)
+    self.gridLayout.addWidget(self.configAutoButton,        4, 3, 1, 1)
 
     self.updateTimeTimer = QtCore.QTimer()
     QtCore.QObject.connect(self.updateTimeTimer, QtCore.SIGNAL("timeout()"), self.update)
     self.updateTimeTimer.start(1000)
     
   def update(self):
-    self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))      
+    self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
     self.requestManager.processRequest()
       
   def applyTimeTableParameters(self):

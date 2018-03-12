@@ -6,7 +6,7 @@ class RequestManager(QtCore.QObject):
     
   def init(self):
     self.autoCtrlParamHandler = self.parent().getAutoControlParametersHandler()
-    self.networkHandler       = self.parent().getNetworkHandler()
+    self.httpHandler          = self.parent().getHTTPHandler()
     
   def processRequest(self):
     onTime  = self.autoCtrlParamHandler.getSwitchOnTime()
@@ -21,13 +21,13 @@ class RequestManager(QtCore.QObject):
       print("OFF !!!")
 
   def switchOnCommand(self):
-    switchOnParam = self.networkHandler.getSwitchOnParameters()
+    switchOnParam = self.httpHandler.getSwitchOnParameters()
     url  = switchOnParam[0]
     body = switchOnParam[1]
-    self.networkHandler.sendRequest(url, body)
+    self.httpHandler.post(url, body)
 
   def switchOffCommand(self):
-    switchOffParam = self.networkHandler.getSwitchOffParameters()
+    switchOffParam = self.httpHandler.getSwitchOffParameters()
     url  = switchOffParam[0]
     body = switchOffParam[1]
-    self.networkHandler.sendRequest(url, body)
+    self.httpHandler.post(url, body)
