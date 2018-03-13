@@ -11,8 +11,8 @@ class ElectricControlWidget(QtGui.QWidget):
     self.relayState      = QtGui.QLabel("-")
     self.tcState         = QtGui.QLabel("-")
 
-    self.labelFontSize    = 15
-    self.valueFontSize    = 15
+    self.labelFontSize    = 13
+    self.valueFontSize    = 13
     
   def init(self):
     self.setupGUI()

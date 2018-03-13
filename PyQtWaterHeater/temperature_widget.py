@@ -11,8 +11,8 @@ class TemperatureWidget(QtGui.QWidget):
     self.waterTemp        = QtGui.QLabel("-")
     self.ambianteTemp     = QtGui.QLabel("-")
 
-    self.labelFontSize    = 15
-    self.valueFontSize    = 15
+    self.labelFontSize    = 13
+    self.valueFontSize    = 13
     
   def init(self):
     self.setupGUI()

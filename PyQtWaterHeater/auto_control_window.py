@@ -1,45 +1,23 @@
 ﻿from PySide import QtGui 
 from PySide import QtCore
-from PySide import QtNetwork
-from PySide import QtXml
 
-class AutoControlParamWindow(QtGui.QDialog):
-  def __init__(self, _parent):
+class AutoControlWindow(QtGui.QDialog):
+  def __init__(self, _parent, autoControlManager):
     QtGui.QDialog.__init__(self, parent=_parent)
+    self.autoCtrlManager  = autoControlManager
     self.gridLayout       = QtGui.QGridLayout()
-    self.labelStartTime   = QtGui.QLabel("Horaire d'allumage")
-    self.titleFontSize    = 30
+    self.autoCtrlEnabled  = None
+    self.labelStartTime   = QtGui.QLabel("Switch on time :")
     self.labelFontSize    = 25
     self.valueFontSize    = 30
     self.startTime        = QtGui.QTimeEdit()
-    self.labelDuration    = QtGui.QLabel("Duree")
+    self.labelDuration    = QtGui.QLabel("Duration :")
     self.duration         = QtGui.QTimeEdit()
-    self.durationTime     = None
-    self.validateButton   = QtGui.QPushButton("Valider")
-    self.onTime           = None
-    self.offTime          = None
+    self.validateButton   = QtGui.QPushButton("Apply")
     
   def init(self):
     self.setupGUI()
     self.placeWidgets()
-    
-  def parseXMLParameters(self, element):
-    hour = element.attribute("hour", "00:00")
-    onTime = QtCore.QDateTime.currentDateTime()
-    onTime.setTime(QtCore.QTime.fromString(hour, "hh:mm"))
-    print("OnTime: ", onTime.toString())
-    self.setSwitchOnTime(onTime)
-    
-    duration = element.attribute("duration", "03:00")
-    print("Duration: ", duration)
-    self.durationTime = QtCore.QTime.fromString(duration, "hh:mm")
-    self.setDurationTime(self.durationTime)
-    
-  def getXMLConfiguration(self, doc):
-    onOffParamNode = doc.createElement("OnOffParameters")
-    onOffParamNode.setAttribute("hour", self.getSwitchOnTime().time().toString("hh:mm"))
-    onOffParamNode.setAttribute("duration", self.getDurationTime().toString("hh:mm"))
-    return onOffParamNode
     
   def setupGUI(self):
     labelFont = QtGui.QFont(self.labelStartTime.font())
@@ -53,7 +31,6 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.startTime.setFont(valueFont)
     self.startTime.setAlignment(QtCore.Qt.AlignCenter)
     self.startTime.setDisplayFormat("hh:mm")
-    self.startTime.setDateTime(self.onTime)
 
     self.labelDuration.setFont(labelFont)
     self.duration.setStyleSheet("QTimeEdit::up-button   { subcontrol-position: left;  width: 40px; height: 40px; }"
@@ -61,7 +38,6 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.duration.setFont(valueFont)
     self.duration.setAlignment(QtCore.Qt.AlignCenter)
     self.duration.setDisplayFormat("hh:mm")
-    self.duration.setTime(self.durationTime)
     
     buttonFont = QtGui.QFont(self.validateButton.font())
     buttonFont.setPointSize(30)
@@ -72,7 +48,6 @@ class AutoControlParamWindow(QtGui.QDialog):
     QtCore.QObject.connect(self.validateButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.applyParameters)
-    
     self.setLayout(self.gridLayout)
     self.setFixedSize(QtCore.QSize(380, 380))
 
@@ -83,35 +58,20 @@ class AutoControlParamWindow(QtGui.QDialog):
     self.gridLayout.addWidget(self.duration,         4, 2)
     self.gridLayout.addWidget(self.validateButton,   6, 2)
     
-  def setSwitchOnTime(self, time):
-    self.onTime = time
-    self.startTime.setDateTime(self.onTime)
+  def _show(self):
+    #self.autoCtrlEnabled.setChecked(self.autoCtrlManager.isEnabled())
+    self.startTime.setDateTime(self.autoCtrlManager.getSwitchOnTime())
+    self.duration.setTime(self.autoCtrlManager.getDurationTime())
+    self.show()
     
-  def getSwitchOnTime(self):
-    return self.onTime
-    
-  def setSwitchOffTime(self, time):
-    self.offTime = time
-    
-  def getSwitchOffTime(self):
-    return self.offTime
-    
-  def setDurationTime(self, time):
-    self.durationTime = time
-    self.duration.setTime(self.durationTime)
-    self.processSwitchOffDateTime()
-    
-  def getDurationTime(self):
-    return self.duration.time()
-    
-  def processSwitchOffDateTime(self):
-    tempTime = QtCore.QDateTime(self.onTime)
-    self.offTime = tempTime.addSecs((self.durationTime.hour() * 60 * 60) + \
-                                     self.durationTime.minute() * 60)  
+  def autoCtrlEnabledEvent(self):
+    #self.stateTime.setEnabled()
+    #self.duration.setEnabled()
     
   def applyParameters(self):
-    self.onTime = self.startTime.dateTime()
-    self.processSwitchOffDateTime()
+    #self.autoCtrlManager.setEnabled(self.autoCtrlEnabled.isChecked())
+    self.autoCtrlManager.setSwitchOnTime(self.startTime.dateTime())
+    self.autoCtrlManager.setDurationTime(self.duration.time())
     self.hide()
-    self.parent().applyTimeTableParameters()
+    self.autoCtrlManager.newConfigEvent()
       

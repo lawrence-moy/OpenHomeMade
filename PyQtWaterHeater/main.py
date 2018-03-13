@@ -1,13 +1,14 @@
 ﻿from PySide import QtGui 
 from PySide import QtCore
 from PySide import QtXml
-import auto_param_window
+import auto_control_manager
 import http_handler
-import request_manager
+#import request_manager
 import electrical_counter_widget
 import temperature_widget
 import delay_widget
 import electric_control_widget
+import page
 
 class CumulusManager(QtGui.QWidget):
   def __init__(self):
@@ -27,26 +28,44 @@ class CumulusManager(QtGui.QWidget):
     self.navRightButton = QtGui.QPushButton(u"\u25b6")
     self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
 
-    self.autoCtrlParamWin = auto_param_window.AutoControlParamWindow(self)
-    self.httpHandler      = http_handler.HTTPHandler()
-    self.requestManager   = request_manager.RequestManager(self)
+    self.httpHandler        = http_handler.HTTPHandler()
+    self.autoControlManager = auto_control_manager.AutoControlManager(self)
 
     self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
     self.temperatureWidget       = temperature_widget.TemperatureWidget()
     self.delayWidget             = delay_widget.DelayWidget()
     self.electricControlWidget   = electric_control_widget.ElectricControlWidget()
-
+    
   def init(self):
-    self.autoCtrlParamWin.init()
+    self.autoControlManager.init()
     self.electricalCounterWidget.init()
     self.temperatureWidget.init()
     self.delayWidget.init()
     self.electricControlWidget.init()
     
+    self.initPages()
+    
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
-    self.requestManager.init()
+    self.autoControlManager.init()
+    
+  def initPages(self):
+    mainPage = page.Page("General view")
+    mainPage.init()
+    mainPage.addWidget(self.temperatureWidget,       1, 1, 1, 1)
+    mainPage.addWidget(self.delayWidget,             2, 1, 1, 1)
+    mainPage.addWidget(self.waterHeaterImg,          1, 2, 3, 1)#, QtCore.Qt.AlignCenter)
+    mainPage.addWidget(self.electricalCounterWidget, 1, 3, 1, 1)
+    
+    historyPage = page.Page("History")
+    historyPage.init()
+    
+    self.pagesList = []
+    self.pagesList.append(mainPage)
+    self.pagesList.append(historyPage)
+    
+    self.currentPageIndex = 0 
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -64,8 +83,8 @@ class CumulusManager(QtGui.QWidget):
       if not element.isNull():
         if "Network" == element.tagName():
           self.httpHandler.parseXMLParameters(element)
-        elif ("OnOffParameters" == element.tagName()):
-          self.autoCtrlParamWin.parseXMLParameters(element)
+        elif ("AutoControlParameters" == element.tagName()):
+          self.autoControlManager.parseXMLParameters(element)
       n = n.nextSibling()
       
   def saveXMLConfiguration(self):
@@ -74,7 +93,7 @@ class CumulusManager(QtGui.QWidget):
 
     networkNode = self.httpHandler.getXMLConfiguration(doc)
     rootNode.appendChild(networkNode)
-    onOffParamNode = self.autoCtrlParamWin.getXMLConfiguration(doc)
+    onOffParamNode = self.autoControlManager.getXMLConfiguration(doc)
     rootNode.appendChild(onOffParamNode)
     doc.appendChild(rootNode)
     
@@ -123,39 +142,37 @@ class CumulusManager(QtGui.QWidget):
 
     self.setLayout(self.gridLayout)
     self.setFixedSize(QtCore.QSize(800, 480))
-
-  def getAutoControlParametersHandler(self):
-    return self.autoCtrlParamWin
     
   def getHTTPHandler(self):
-    return self.httpHandler  
+    return self.httpHandler
   
   def openAutoCtrlCfgWindow(self):
-    self.autoCtrlParamWin.show()
+    self.autoControlManager.show()
   
   def placeWidgets(self):
     self.gridLayout.addWidget(self.labelTitle,              0, 0, 1, 3)
-    self.gridLayout.addWidget(self.labelCurrentTime,        0, 2, 1, 2, QtCore.Qt.AlignRight)
+    self.gridLayout.addWidget(self.labelCurrentTime,        0, 3, 1, 2, QtCore.Qt.AlignRight)
     
     self.navLeftButton.setFixedSize(45, 340)
     arrowFont = QtGui.QFont(self.navLeftButton.font())
-    arrowFont.setPointSize(40)
+    arrowFont.setPointSize(50)
     self.navLeftButton.setFont(arrowFont)
     self.gridLayout.addWidget(self.navLeftButton,           1, 0, 3, 1)
+    QtCore.QObject.connect(self.navLeftButton, 
+                           QtCore.SIGNAL("clicked()"), 
+                           self.previousPage)
 
-    self.gridLayout.addWidget(self.temperatureWidget,       1, 1, 1, 1)
-    self.gridLayout.addWidget(self.delayWidget,             2, 1, 1, 1)
+    self.gridLayout.addWidget(self.pagesList[0],          1, 1, 3, 3, QtCore.Qt.AlignCenter)
+    self.gridLayout.addWidget(self.pagesList[1],          1, 1, 3, 3, QtCore.Qt.AlignCenter)
 
-    self.gridLayout.addWidget(self.waterHeaterImg,          1, 2, 3, 1, QtCore.Qt.AlignCenter)
-    
-    self.gridLayout.addWidget(self.electricControlWidget,   1, 3, 1, 1)
-    self.gridLayout.addWidget(self.electricalCounterWidget, 2, 3, 1, 1)
-    
     self.navRightButton.setFixedSize(45, 340)
     arrowFont = QtGui.QFont(self.navRightButton.font())
-    arrowFont.setPointSize(40)
+    arrowFont.setPointSize(50)
     self.navRightButton.setFont(arrowFont)
     self.gridLayout.addWidget(self.navRightButton,          1, 4, 3, 1)
+    QtCore.QObject.connect(self.navRightButton, 
+                           QtCore.SIGNAL("clicked()"), 
+                           self.nextPage)
 
     self.gridLayout.addWidget(self.forceOnButton,           4, 1, 1, 1)
     self.gridLayout.addWidget(self.forceOffButton,          4, 2, 1, 1)
@@ -167,16 +184,29 @@ class CumulusManager(QtGui.QWidget):
     
   def update(self):
     self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
-    self.requestManager.processRequest()
-      
-  def applyTimeTableParameters(self):
-    self.saveXMLConfiguration()
+    self.autoControlManager.processRequest()
     
   def forceOnCommand(self):
-    self.requestManager.switchOnCommand()
+    self.autoControlManager.switchOnCommand()
 
   def forceOffCommand(self):
-    self.requestManager.switchOffCommand()
+    self.autoControlManager.switchOffCommand()
+    
+  def nextPage(self):
+    if self.currentPageIndex >= len(self.pagesList)-1:
+        return
+    self.pagesList[self.currentPageIndex].hide()
+    self.currentPageIndex += 1
+    self.pagesList[self.currentPageIndex].show()
+    self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
+    
+  def previousPage(self):
+    if self.currentPageIndex <= 0:
+        return
+    self.pagesList[self.currentPageIndex].hide()
+    self.currentPageIndex -= 1
+    self.pagesList[self.currentPageIndex].show()
+    self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
 
 app = QtGui.QApplication([])
 

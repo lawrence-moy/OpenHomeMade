@@ -1,6 +1,5 @@
 ﻿from PySide import QtCore
 from PySide import QtNetwork
-from PySide import QtXml
 
 class HTTPHandler(QtCore.QObject):
   def __init__(self):
