@@ -23,7 +23,7 @@ class CumulusManager(QtGui.QWidget):
     self.labelCurrentTime = QtGui.QLabel("00:00:00")
     self.forceOnButton    = QtGui.QPushButton("Force ON")
     self.forceOffButton   = QtGui.QPushButton("Force OFF")
-    self.configAutoButton = QtGui.QPushButton("Configure")
+    self.configAutoButton = QtGui.QPushButton("Timetable")
     
     self.navRightButton = QtGui.QPushButton(u"\u25b6")
     self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
@@ -61,11 +61,19 @@ class CumulusManager(QtGui.QWidget):
     historyPage = page.Page("History")
     historyPage.init()
     
+    configPage = page.Page("Configuration")
+    configPage.init()
+    configPage.addWidget(self.forceOnButton,           0, 0, 1, 1)
+    configPage.addWidget(self.forceOffButton,          0, 1, 1, 1)
+    configPage.addWidget(self.configAutoButton,        1, 0, 1, 1)
+    
     self.pagesList = []
     self.pagesList.append(mainPage)
     self.pagesList.append(historyPage)
+    self.pagesList.append(configPage)
     
-    self.currentPageIndex = 0 
+    self.currentPageIndex = 0
+    self.pagesList[self.currentPageIndex].show()
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -122,6 +130,7 @@ class CumulusManager(QtGui.QWidget):
     buttonFont = QtGui.QFont(self.forceOnButton.font())
     buttonFont.setPointSize(30)
     self.forceOnButton.setFont(buttonFont)
+    self.forceOnButton.setFixedSize(300, 100)
     QtCore.QObject.connect(self.forceOnButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.forceOnCommand)
@@ -129,6 +138,7 @@ class CumulusManager(QtGui.QWidget):
     buttonFont = QtGui.QFont(self.forceOffButton.font())
     buttonFont.setPointSize(30)
     self.forceOffButton.setFont(buttonFont)
+    self.forceOffButton.setFixedSize(300, 100)
     QtCore.QObject.connect(self.forceOffButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.forceOffCommand)
@@ -136,6 +146,7 @@ class CumulusManager(QtGui.QWidget):
     buttonFont = QtGui.QFont(self.configAutoButton.font())
     buttonFont.setPointSize(30)
     self.configAutoButton.setFont(buttonFont)
+    self.configAutoButton.setFixedSize(300, 100)
     QtCore.QObject.connect(self.configAutoButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.openAutoCtrlCfgWindow)
@@ -153,7 +164,7 @@ class CumulusManager(QtGui.QWidget):
     self.gridLayout.addWidget(self.labelTitle,              0, 0, 1, 3)
     self.gridLayout.addWidget(self.labelCurrentTime,        0, 3, 1, 2, QtCore.Qt.AlignRight)
     
-    self.navLeftButton.setFixedSize(45, 340)
+    self.navLeftButton.setFixedSize(45, 400)
     arrowFont = QtGui.QFont(self.navLeftButton.font())
     arrowFont.setPointSize(50)
     self.navLeftButton.setFont(arrowFont)
@@ -164,8 +175,9 @@ class CumulusManager(QtGui.QWidget):
 
     self.gridLayout.addWidget(self.pagesList[0],          1, 1, 3, 3, QtCore.Qt.AlignCenter)
     self.gridLayout.addWidget(self.pagesList[1],          1, 1, 3, 3, QtCore.Qt.AlignCenter)
+    self.gridLayout.addWidget(self.pagesList[2],          1, 1, 3, 3, QtCore.Qt.AlignCenter) 
 
-    self.navRightButton.setFixedSize(45, 340)
+    self.navRightButton.setFixedSize(45, 400)
     arrowFont = QtGui.QFont(self.navRightButton.font())
     arrowFont.setPointSize(50)
     self.navRightButton.setFont(arrowFont)
@@ -173,10 +185,6 @@ class CumulusManager(QtGui.QWidget):
     QtCore.QObject.connect(self.navRightButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.nextPage)
-
-    self.gridLayout.addWidget(self.forceOnButton,           4, 1, 1, 1)
-    self.gridLayout.addWidget(self.forceOffButton,          4, 2, 1, 1)
-    self.gridLayout.addWidget(self.configAutoButton,        4, 3, 1, 1)
 
     self.updateTimeTimer = QtCore.QTimer()
     QtCore.QObject.connect(self.updateTimeTimer, QtCore.SIGNAL("timeout()"), self.update)

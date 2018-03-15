@@ -7,7 +7,10 @@ class Page(QtGui.QWidget):
     self.gridLayout = QtGui.QGridLayout()
     
   def init(self):
+    #self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+    #self.resize(800, 800)
     self.setLayout(self.gridLayout)
+    self.hide()
     
   def addWidget(self, widget, row, column, rowSpan, columnSpan):
     self.gridLayout.addWidget(widget, row, column, rowSpan, columnSpan)

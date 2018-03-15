@@ -6,8 +6,8 @@ class AutoControlWindow(QtGui.QDialog):
     QtGui.QDialog.__init__(self, parent=_parent)
     self.autoCtrlManager  = autoControlManager
     self.gridLayout       = QtGui.QGridLayout()
-    self.autoCtrlEnabled  = None
-    self.labelStartTime   = QtGui.QLabel("Switch on time :")
+    self.autoCtrlEnabled  = QtGui.QPushButton("Enable auto control")
+    self.labelStartTime   = QtGui.QLabel("Time switch on :")
     self.labelFontSize    = 25
     self.valueFontSize    = 30
     self.startTime        = QtGui.QTimeEdit()
@@ -23,6 +23,12 @@ class AutoControlWindow(QtGui.QDialog):
     labelFont = QtGui.QFont(self.labelStartTime.font())
     labelFont.setPointSize(self.labelFontSize)
     self.labelStartTime.setFont(labelFont)
+    
+    self.autoCtrlEnabled.setFont(labelFont)
+    self.autoCtrlEnabled.setCheckable(True)
+    QtCore.QObject.connect(self.autoCtrlEnabled, 
+                           QtCore.SIGNAL("clicked()"), 
+                           self.autoCtrlEnabledEvent)
     
     self.startTime.setStyleSheet("QTimeEdit::up-button   { subcontrol-position: left;  width: 40px; height: 40px; }"
                                  "QTimeEdit::down-button { subcontrol-position: right; width: 40px; height: 40px; }")
@@ -52,6 +58,7 @@ class AutoControlWindow(QtGui.QDialog):
     self.setFixedSize(QtCore.QSize(380, 380))
 
   def placeWidgets(self):
+    self.gridLayout.addWidget(self.autoCtrlEnabled,  0, 2)
     self.gridLayout.addWidget(self.labelStartTime,   1, 2)
     self.gridLayout.addWidget(self.startTime,        2, 2)
     self.gridLayout.addWidget(self.labelDuration,    3, 2)
@@ -59,17 +66,19 @@ class AutoControlWindow(QtGui.QDialog):
     self.gridLayout.addWidget(self.validateButton,   6, 2)
     
   def _show(self):
-    #self.autoCtrlEnabled.setChecked(self.autoCtrlManager.isEnabled())
+    self.autoCtrlEnabled.setChecked(self.autoCtrlManager.isEnabled())
+    self.autoCtrlEnabledEvent()
     self.startTime.setDateTime(self.autoCtrlManager.getSwitchOnTime())
     self.duration.setTime(self.autoCtrlManager.getDurationTime())
     self.show()
     
   def autoCtrlEnabledEvent(self):
-    #self.stateTime.setEnabled()
-    #self.duration.setEnabled()
+    state = self.autoCtrlEnabled.isChecked()
+    self.startTime.setEnabled(state)
+    self.duration.setEnabled(state)
     
   def applyParameters(self):
-    #self.autoCtrlManager.setEnabled(self.autoCtrlEnabled.isChecked())
+    self.autoCtrlManager.setEnabled(self.autoCtrlEnabled.isChecked())
     self.autoCtrlManager.setSwitchOnTime(self.startTime.dateTime())
     self.autoCtrlManager.setDurationTime(self.duration.time())
     self.hide()

@@ -16,10 +16,10 @@ class AutoControlManager(QtCore.QObject):
     self.autoControlWindow.init()
     
   def parseXMLParameters(self, element):
-    autoCtrlEnables = element.attribute("state", "True")
-    if "True" = autoCtrlEnabled:
+    autoCtrlEnabled = element.attribute("enabled", "True")
+    if "True" == autoCtrlEnabled:
       self.autoCtrlEnabled = True
-    elif "False" = autoCtrlEnables:
+    elif "False" == autoCtrlEnabled:
       self.autoCtrlEnabled = False
   
     hour = element.attribute("hour", "00:00")
@@ -33,13 +33,17 @@ class AutoControlManager(QtCore.QObject):
     self.processSwitchOffDateTime()
     
   def getXMLConfiguration(self, doc):
-    onOffParamNode = doc.createElement("OnOffParameters")
+    onOffParamNode = doc.createElement("AutoControlParameters")
+    bool = "False"
+    if True == self.isEnabled():
+      bool = "True"
+    onOffParamNode.setAttribute("enabled", bool)
     onOffParamNode.setAttribute("hour", self.getSwitchOnTime().time().toString("hh:mm"))
     onOffParamNode.setAttribute("duration", self.getDurationTime().toString("hh:mm"))
     return onOffParamNode
     
   def processRequest(self):
-    if False = self.autoCtrlEnabled:
+    if False == self.autoCtrlEnabled:
       return
     if (QtCore.QDateTime.currentDateTime().__ge__(self.onTime) ):
       self.switchOnCommand()
