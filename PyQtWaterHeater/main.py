@@ -2,8 +2,8 @@
 from PySide import QtCore
 from PySide import QtXml
 import auto_control_manager
+import general_config_manager
 import http_handler
-#import request_manager
 import electrical_counter_widget
 import temperature_widget
 import delay_widget
@@ -30,8 +30,9 @@ class CumulusManager(QtGui.QWidget):
     self.navRightButton = QtGui.QPushButton(u"\u25b6")
     self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
 
-    self.httpHandler        = http_handler.HTTPHandler()
-    self.autoControlManager = auto_control_manager.AutoControlManager(self)
+    self.httpHandler          = http_handler.HTTPHandler()
+    self.autoControlManager   = auto_control_manager.AutoControlManager(self)
+    self.generalConfigManager = general_config_manager.GeneralConfigManager(self)
 
     self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
     self.temperatureWidget       = temperature_widget.TemperatureWidget()
@@ -40,6 +41,8 @@ class CumulusManager(QtGui.QWidget):
     
   def init(self):
     self.autoControlManager.init()
+    self.generalConfigManager.init()
+    
     self.electricalCounterWidget.init()
     self.temperatureWidget.init()
     self.delayWidget.init()
@@ -70,7 +73,6 @@ class CumulusManager(QtGui.QWidget):
     configPage.addWidget(self.configAutoButton,        1, 0, 1, 1)
     configPage.addWidget(self.configGeneralButton,     1, 1, 1, 1)
     configPage.addWidget(self.configNetworkButton,     2, 0, 1, 1)
-    
     
     self.pagesList = []
     self.pagesList.append(mainPage)
@@ -156,7 +158,7 @@ class CumulusManager(QtGui.QWidget):
                            callback)
                            
   def openCfgGeneralWindow(self):
-    pass
+    self.generalConfigManager.show()
     
   def openCfgNetworkWindow(self):
     pass
@@ -228,6 +230,5 @@ app = QtGui.QApplication([])
 cumulusManager = CumulusManager()
 cumulusManager.init()
 cumulusManager.show()
-#cumulusManager.showFullScreen()
 
 app.exec_()
