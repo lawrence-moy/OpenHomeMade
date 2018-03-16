@@ -20,10 +20,12 @@ class CumulusManager(QtGui.QWidget):
 
     self.titleFontSize    = 30
 
-    self.labelCurrentTime = QtGui.QLabel("00:00:00")
-    self.forceOnButton    = QtGui.QPushButton("Force ON")
-    self.forceOffButton   = QtGui.QPushButton("Force OFF")
-    self.configAutoButton = QtGui.QPushButton("Timetable")
+    self.labelCurrentTime    = QtGui.QLabel("00:00:00")
+    self.forceOnButton       = QtGui.QPushButton("Force ON")
+    self.forceOffButton      = QtGui.QPushButton("Force OFF")
+    self.configAutoButton    = QtGui.QPushButton("Timetable")
+    self.configGeneralButton = QtGui.QPushButton("General")
+    self.configNetworkButton = QtGui.QPushButton("Network")
     
     self.navRightButton = QtGui.QPushButton(u"\u25b6")
     self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
@@ -66,6 +68,9 @@ class CumulusManager(QtGui.QWidget):
     configPage.addWidget(self.forceOnButton,           0, 0, 1, 1)
     configPage.addWidget(self.forceOffButton,          0, 1, 1, 1)
     configPage.addWidget(self.configAutoButton,        1, 0, 1, 1)
+    configPage.addWidget(self.configGeneralButton,     1, 1, 1, 1)
+    configPage.addWidget(self.configNetworkButton,     2, 0, 1, 1)
+    
     
     self.pagesList = []
     self.pagesList.append(mainPage)
@@ -126,33 +131,35 @@ class CumulusManager(QtGui.QWidget):
     self.labelCurrentTime.setFont(valueFont)
     self.labelCurrentTime.setAlignment(QtCore.Qt.AlignCenter)
     self.labelCurrentTime.setStyleSheet("font-weight: bold; color: blue")
-    
-    buttonFont = QtGui.QFont(self.forceOnButton.font())
-    buttonFont.setPointSize(30)
-    self.forceOnButton.setFont(buttonFont)
-    self.forceOnButton.setFixedSize(300, 100)
-    QtCore.QObject.connect(self.forceOnButton, 
-                           QtCore.SIGNAL("clicked()"), 
-                           self.forceOnCommand)
-
-    buttonFont = QtGui.QFont(self.forceOffButton.font())
-    buttonFont.setPointSize(30)
-    self.forceOffButton.setFont(buttonFont)
-    self.forceOffButton.setFixedSize(300, 100)
-    QtCore.QObject.connect(self.forceOffButton, 
-                           QtCore.SIGNAL("clicked()"), 
-                           self.forceOffCommand)
-                         
-    buttonFont = QtGui.QFont(self.configAutoButton.font())
-    buttonFont.setPointSize(30)
-    self.configAutoButton.setFont(buttonFont)
-    self.configAutoButton.setFixedSize(300, 100)
-    QtCore.QObject.connect(self.configAutoButton, 
-                           QtCore.SIGNAL("clicked()"), 
-                           self.openAutoCtrlCfgWindow)
+                               
+    self.configureButton(self.forceOnButton, 
+                         self.forceOnCommand)                         
+    self.configureButton(self.forceOffButton, 
+                         self.forceOffCommand)                           
+    self.configureButton(self.configAutoButton, 
+                         self.openAutoCtrlCfgWindow)
+    self.configureButton(self.configGeneralButton, 
+                         self.openCfgGeneralWindow)
+    self.configureButton(self.configNetworkButton, 
+                         self.openCfgNetworkWindow)
 
     self.setLayout(self.gridLayout)
     self.setFixedSize(QtCore.QSize(800, 480))
+    
+  def configureButton(self, button, callback):
+    buttonFont = QtGui.QFont(button.font())
+    buttonFont.setPointSize(30)
+    button.setFont(buttonFont)
+    button.setFixedSize(300, 100)
+    QtCore.QObject.connect(button, 
+                           QtCore.SIGNAL("clicked()"), 
+                           callback)
+                           
+  def openCfgGeneralWindow(self):
+    pass
+    
+  def openCfgNetworkWindow(self):
+    pass
     
   def getHTTPHandler(self):
     return self.httpHandler
