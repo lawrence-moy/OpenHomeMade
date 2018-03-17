@@ -11,6 +11,9 @@ class DataRetrievingManager(QtCore.QObject):
     
   def finish(self):
     self.service.stop()
+    if not self.service.wait(3000):
+      self.service.terminate()
+      self.service.wait()
     
   def parseXMLParameters(self, element):
     subDataRetrievingNode = element.firstChild()

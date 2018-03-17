@@ -12,7 +12,6 @@ class WebServiceRequester(QtCore.QThread):
     pass
     
   def stop(self):
-    print("STOP")
     self.exiting = True
     
   def run(self):
