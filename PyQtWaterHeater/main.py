@@ -3,6 +3,7 @@ from PySide import QtCore
 from PySide import QtXml
 import auto_control_manager
 import general_config_manager
+import data_retrieving_manager
 import http_handler
 import electrical_counter_widget
 import temperature_widget
@@ -30,17 +31,19 @@ class CumulusManager(QtGui.QWidget):
     self.navRightButton = QtGui.QPushButton(u"\u25b6")
     self.navLeftButton  = QtGui.QPushButton(u"\u25c0")
 
-    self.httpHandler          = http_handler.HTTPHandler()
-    self.autoControlManager   = auto_control_manager.AutoControlManager(self)
-    self.generalConfigManager = general_config_manager.GeneralConfigManager(self)
+    self.httpHandler           = http_handler.HTTPHandler()
+    self.autoControlManager    = auto_control_manager.AutoControlManager(self)
+    self.generalConfigManager  = general_config_manager.GeneralConfigManager(self)
+    self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
 
     self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
     self.temperatureWidget       = temperature_widget.TemperatureWidget()
     self.delayWidget             = delay_widget.DelayWidget()
     self.electricControlWidget   = electric_control_widget.ElectricControlWidget()
     
+    self.pagesList = []
+    
   def init(self):
-    self.autoControlManager.init()
     self.generalConfigManager.init()
     
     self.electricalCounterWidget.init()
@@ -53,20 +56,22 @@ class CumulusManager(QtGui.QWidget):
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
+    
     self.autoControlManager.init()
+    self.dataRetrievingManager.init()
     
   def initPages(self):
-    mainPage = page.Page("General view")
+    mainPage = page.Page(self, "General view")
     mainPage.init()
     mainPage.addWidget(self.temperatureWidget,       1, 1, 1, 1)
     mainPage.addWidget(self.delayWidget,             2, 1, 1, 1)
     mainPage.addWidget(self.waterHeaterImg,          1, 2, 3, 1)#, QtCore.Qt.AlignCenter)
     mainPage.addWidget(self.electricalCounterWidget, 1, 3, 1, 1)
     
-    historyPage = page.Page("History")
+    historyPage = page.Page(self, "History")
     historyPage.init()
     
-    configPage = page.Page("Configuration")
+    configPage = page.Page(self, "Configuration")
     configPage.init()
     configPage.addWidget(self.forceOnButton,           0, 0, 1, 1)
     configPage.addWidget(self.forceOffButton,          0, 1, 1, 1)
@@ -92,15 +97,23 @@ class CumulusManager(QtGui.QWidget):
       return
     file.close()
     docElem = doc.documentElement()
-    n = docElem.firstChild()
-    while not n.isNull():
-      element = n.toElement()
+    mainNode = docElem.firstChild()
+    while not mainNode.isNull():
+      element = mainNode.toElement()
       if not element.isNull():
         if "Network" == element.tagName():
-          self.httpHandler.parseXMLParameters(element)
+          subNetworkNode = element.firstChild()
+          while not subNetworkNode.isNull():
+            subElement = subNetworkNode.toElement()
+            if not subElement.isNull():
+              if "Commands" == subElement.tagName():
+                self.httpHandler.parseXMLParameters(subElement)
+              elif "DataRetrieving" == subElement.tagName():
+                self.dataRetrievingManager.parseXMLParameters(subElement)
+            subNetworkNode = subNetworkNode.nextSibling()
         elif ("AutoControlParameters" == element.tagName()):
           self.autoControlManager.parseXMLParameters(element)
-      n = n.nextSibling()
+      mainNode = mainNode.nextSibling()
       
   def saveXMLConfiguration(self):
     doc = QtXml.QDomDocument("Configuration")
@@ -225,6 +238,10 @@ class CumulusManager(QtGui.QWidget):
     self.pagesList[self.currentPageIndex].show()
     self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
 
+  def closeEvent(self, event):
+    self.dataRetrievingManager.finish()
+    event.accept()
+    
 app = QtGui.QApplication([])
 
 cumulusManager = CumulusManager()

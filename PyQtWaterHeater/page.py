@@ -1,8 +1,8 @@
 ﻿from PySide import QtGui
 
 class Page(QtGui.QWidget):
-  def __init__(self, title):
-    QtGui.QWidget.__init__(self)
+  def __init__(self, _parent, title):
+    QtGui.QWidget.__init__(self, parent=_parent)
     self.title      = title
     self.gridLayout = QtGui.QGridLayout()
     

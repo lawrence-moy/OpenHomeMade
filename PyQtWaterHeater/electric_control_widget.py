@@ -43,7 +43,7 @@ class ElectricControlWidget(QtGui.QWidget):
     self.gridLayout.addWidget(self.relayState,      0, 1)
     self.gridLayout.addWidget(self.tcState,   1, 1)
     
-  def paintEvent(self, event):
-    p = QtGui.QPainter(self)
-    p.drawRoundedRect(0, 5, self.width()-5, self.height()-7, 3, 3)
+  #def paintEvent(self, event):
+  #  p = QtGui.QPainter(self)
+  #  p.drawRoundedRect(0, 5, self.width()-5, self.height()-7, 3, 3)
       
