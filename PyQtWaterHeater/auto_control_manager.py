@@ -58,13 +58,16 @@ class AutoControlManager(QtCore.QObject):
     switchOnParam = self.httpHandler.getSwitchOnParameters()
     url  = switchOnParam[0]
     body = switchOnParam[1]
-    self.httpHandler.post(url, body)
+    self.httpHandler.post(url, body, self.processReply)
 
   def switchOffCommand(self):
     switchOffParam = self.httpHandler.getSwitchOffParameters()
     url  = switchOffParam[0]
     body = switchOffParam[1]
-    self.httpHandler.post(url, body)
+    self.httpHandler.post(url, body, self.processReply)
+    
+  def processReply(self, reply):
+    pass
     
   def getSwitchOnTime(self):
     return self.onTime

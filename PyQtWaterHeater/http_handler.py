@@ -8,10 +8,8 @@ class HTTPHandler(QtCore.QObject):
     self.offRequestParam  = (None, None)
     
     self.postManager = QtNetwork.QNetworkAccessManager(self)
-    self.postManager.finished[QtNetwork.QNetworkReply].connect(self.replyPOST)
-    
     self.getManager = QtNetwork.QNetworkAccessManager(self)
-    self.getManager.finished[QtNetwork.QNetworkReply].connect(self.replyGET)
+    
     #self.comStateCumulusLabel = QtGui.QLabel("Etat COM Cumulus :")
     #self.comStateCounterLabel = QtGui.QLabel("Etat COM Compteur :")
     #self.comStatePylierLabel  = QtGui.QLabel("Etat COM Pylier :")
@@ -52,22 +50,19 @@ class HTTPHandler(QtCore.QObject):
   def getSwitchOffParameters(self):
     return self.offRequestParam
     
-  def post(self, urlPath, data):
+  def post(self, urlPath, data, replyCallback):
     url = QtCore.QUrl(urlPath)
     request = QtNetwork.QNetworkRequest(url)
     request.setHeader(QtNetwork.QNetworkRequest.ContentTypeHeader, "application/json")
-    print("POST:", data)
+    print("POST:", replyCallback)
+    self.postManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
     self.postManager.post(request, data)
     
-  def get(self, urlPath):
+  def get(self, urlPath, replyCallback):
     url = QtCore.QUrl(urlPath)
     request = QtNetwork.QNetworkRequest(url)
-    print("GET:", data)
+    print("GET:", urlPath)
+    self.getManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
     self.postManager.get(request)
         
-  def replyPOST(self, reply):
-    print(reply.readAll())
-    
-  def replyGET(self, reply):
-    print(reply.readAll())
     

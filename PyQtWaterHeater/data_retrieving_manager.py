@@ -21,9 +21,8 @@ class DataRetrievingManager(QtCore.QObject):
       serviceElement = subDataRetrievingNode.toElement()
       if not serviceElement.isNull():
         if "WebService" == serviceElement.tagName():
-           print("trert")
            url      = serviceElement.attribute("url", "")
-           interval = serviceElement.attribute("interval", "1")
+           interval = float(serviceElement.attribute("interval", "1"))
            webService = web_service_requester.WebServiceRequester(self, url, interval)
            webService.start()
            self.service = webService

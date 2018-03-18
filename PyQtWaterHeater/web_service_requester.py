@@ -1,5 +1,6 @@
 ﻿from PySide import QtCore
 import time
+import http_handler
 
 class WebServiceRequester(QtCore.QThread):
   def __init__(self, _parent, url, interval):
@@ -15,6 +16,10 @@ class WebServiceRequester(QtCore.QThread):
     self.exiting = True
     
   def run(self):
+    self.httpHandler = http_handler.HTTPHandler()
     while False == self.exiting:
-      print("-")
-      time.sleep(0.1)
+      self.httpHandler.get(self.url, self.processReply)
+      time.sleep(self.interval)
+
+  def processReply(self, reply):
+    pass
