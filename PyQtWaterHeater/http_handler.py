@@ -64,5 +64,3 @@ class HTTPHandler(QtCore.QObject):
     print("GET:", urlPath)
     self.getManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
     self.postManager.get(request)
-        
-    
