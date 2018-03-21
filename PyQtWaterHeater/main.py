@@ -171,6 +171,9 @@ class CumulusManager(QtGui.QWidget):
     
   def getHTTPHandler(self):
     return self.httpHandler
+    
+  def getDataRetrievingManager(self):
+    return self.dataRetrievingManager
   
   def openAutoCtrlCfgWindow(self):
     self.autoControlManager.show()

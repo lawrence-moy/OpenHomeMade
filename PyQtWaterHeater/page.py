@@ -1,4 +1,5 @@
 ﻿from PySide import QtGui
+import string_value_widget
 
 class Page():
   def __init__(self, parent, title):
@@ -34,11 +35,18 @@ class Page():
             pixmap = QtGui.QPixmap(path)
             widget = QtGui.QLabel(text)
             widget.setPixmap(pixmap)
-            
-          x    = int(widgetElement.attribute("x", "0"))
-          y    = int(widgetElement.attribute("y", "0"))
+          elif "value" == type:
+            variable = widgetElement.attribute("variable", "")
+            widget = string_value_widget.StringValueWidget(variable)
+            self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
+            widget.init()
+          x      = int(widgetElement.attribute("x", "0"))
+          y      = int(widgetElement.attribute("y", "0"))
+          width  = int(widgetElement.attribute("width", "50"))
+          height = int(widgetElement.attribute("height", "50"))
           widget.setParent(self.parent)
           widget.move(x, y)
+          widget.setFixedSize(width, height)
           widget.show()
           self.widgetList.append(widget)
       widgetNode = widgetNode.nextSibling()
