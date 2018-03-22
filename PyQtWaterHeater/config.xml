@@ -13,8 +13,8 @@
  <Pages>
    <Page title="General">
      <Widget type="label" text="Température eau :" x="200" y="200" width="100" height="30" />
-     <Widget type="image" path="cumulus.png" x="330" y="100" width="300" height="300" />
-     <Widget type="value" variable="water_temp" x="300" y="200" width="50" height="30" />
+     <Widget type="image" path="cumulus.png"       x="330" y="100" width="300" height="300" />
+     <Widget type="value" variable="water_temp"    x="300" y="200" width="50" height="30" />
    </Page>
    <Page title="History">
    </Page>
@@ -26,8 +26,10 @@
        <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>
      <Widget type="button" text="AUTO ON/OFF" x="80" y="200" width="300" height="100" >
+       <ModuleEvent module="water_heater" event="config_dialog" />
      </Widget>
      <Widget type="button" text="Config general" x="420" y="200" width="300" height="100" >
+       <ModuleEvent module="general" event="config_dialog" />
      </Widget>
    </Page>
  </Pages>

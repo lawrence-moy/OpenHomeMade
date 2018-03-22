@@ -2,17 +2,17 @@
 from PySide import QtCore
 
 class ButtonWidget(QtGui.QPushButton):
-  def __init__(self, httpHandler):
+  def __init__(self, parent):
     QtGui.QPushButton.__init__(self)
     self.fontSize     = 13
     self.requestList  = []
-    self.httpHandler  = httpHandler
+    self.parent       = parent
+    self.httpHandler  = parent.getHTTPHandler()
     
   def init(self):
     QtCore.QObject.connect(self, 
                            QtCore.SIGNAL("clicked()"), 
                            self.clickedEvent)
-    
     #buttonFont = QtGui.QFont(button.font())
     #buttonFont.setPointSize(30)
     #button.setFont(buttonFont)
@@ -22,12 +22,21 @@ class ButtonWidget(QtGui.QPushButton):
     self.setText(element.attribute("text", ""))
     requestNode = element.firstChild()
     while not requestNode.isNull():
-      requestElement = requestNode.toElement()
-      if not requestElement.isNull():
-        if "HTTPPostRequest" == requestElement.tagName():
-          url  = requestElement.attribute("url", "")
-          body = requestElement.attribute("body", "")
+      eventElement = requestNode.toElement()
+      if not eventElement.isNull():
+        if "HTTPPostRequest" == eventElement.tagName():
+          url  = eventElement.attribute("url", "")
+          body = eventElement.attribute("body", "")
           self.requestList.append((url, body))
+        elif "ModuleEvent" == eventElement.tagName():
+          moduleName = eventElement.attribute("module", "")
+          event      = eventElement.attribute("event", "")
+          module = self.parent.getModule(moduleName)
+          if None != module:
+            callback = module.getCallback(event)
+            QtCore.QObject.connect(self, 
+                                   QtCore.SIGNAL("clicked()"), 
+                                   callback)
       requestNode = requestNode.nextSibling()
     
   def clickedEvent(self):

@@ -1,55 +1,39 @@
 ﻿from PySide import QtGui 
 from PySide import QtCore
 from PySide import QtXml
-import auto_control_manager
+import water_heater_module
 import general_config_manager
 import data_retrieving_manager
 import http_handler
-import electrical_counter_widget
-import temperature_widget
-import delay_widget
-import electric_control_widget
 import page
 
-class CumulusManager(QtGui.QWidget):
+class Versatyle(QtGui.QWidget):
   def __init__(self):
     QtGui.QWidget.__init__(self)
-    self.labelTitle       = QtGui.QLabel("Water-heater Manager", self)
-    self.titleFontSize    = 30
-
-    self.labelCurrentTime    = QtGui.QLabel("00:00:00", self)
-    self.configAutoButton    = QtGui.QPushButton("Timetable")
-    self.configGeneralButton = QtGui.QPushButton("General")
-    self.configNetworkButton = QtGui.QPushButton("Network")
-    
-    self.navRightButton = QtGui.QPushButton(u"\u25b6", self)
-    self.navLeftButton  = QtGui.QPushButton(u"\u25c0", self)
-
+    self.labelTitle            = QtGui.QLabel("Water-heater Manager", self)
+    self.titleFontSize         = 30
+    self.labelCurrentTime      = QtGui.QLabel("00:00:00", self)
+    self.configGeneralButton   = QtGui.QPushButton("General")
+    self.navRightButton        = QtGui.QPushButton(u"\u25b6", self)
+    self.navLeftButton         = QtGui.QPushButton(u"\u25c0", self)
     self.httpHandler           = http_handler.HTTPHandler()
-    self.autoControlManager    = auto_control_manager.AutoControlManager(self)
+    self.waterHeaterModule     = water_heater_module.WaterHeaterModule(self)
     self.generalConfigManager  = general_config_manager.GeneralConfigManager(self)
     self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
-
-    self.electricalCounterWidget = electrical_counter_widget.ElectricalCounterWidget()
-    #self.temperatureWidget       = temperature_widget.TemperatureWidget()
-    self.delayWidget             = delay_widget.DelayWidget()
-    self.electricControlWidget   = electric_control_widget.ElectricControlWidget()
-
-    self.pagesList = []
+    self.modulesDict           = {}
+    self.pagesList             = []
     
   def init(self):
     self.generalConfigManager.init()
+    self.registerModule(self.generalConfigManager)
     
-    self.electricalCounterWidget.init()
-    #self.temperatureWidget.init()
-    self.delayWidget.init()
-    self.electricControlWidget.init()
+    self.waterHeaterModule.init()
+    self.registerModule(self.waterHeaterModule)
     
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
     
-    self.autoControlManager.init()
     self.dataRetrievingManager.init()
 
   def loadXMLConfiguration(self):
@@ -77,10 +61,17 @@ class CumulusManager(QtGui.QWidget):
                 self.dataRetrievingManager.parseXMLParameters(subElement)
             subNetworkNode = subNetworkNode.nextSibling()
         elif ("AutoControlParameters" == element.tagName()):
-          self.autoControlManager.parseXMLParameters(element)
+          self.waterHeaterModule.parseXMLParameters(element)
         elif ("Pages" == element.tagName()):
           self.loadPages(element)
       mainNode = mainNode.nextSibling()
+      
+  def registerModule(self, module):
+    if None == self.modulesDict.get(module.getName()):
+      self.modulesDict[module.getName()] = module
+      
+  def getModule(self, name):
+    return self.modulesDict.get(name)
       
   def loadPages(self, element):
     self.pagesList = []
@@ -104,7 +95,7 @@ class CumulusManager(QtGui.QWidget):
 
     networkNode = self.httpHandler.getXMLConfiguration(doc)
     rootNode.appendChild(networkNode)
-    onOffParamNode = self.autoControlManager.getXMLConfiguration(doc)
+    onOffParamNode = self.waterHeaterModule.getXMLConfiguration(doc)
     rootNode.appendChild(onOffParamNode)
     doc.appendChild(rootNode)
     
@@ -128,12 +119,8 @@ class CumulusManager(QtGui.QWidget):
     self.labelCurrentTime.setAlignment(QtCore.Qt.AlignCenter)
     self.labelCurrentTime.setStyleSheet("font-weight: bold; color: blue")
                                                          
-    self.configureButton(self.configAutoButton, 
-                         self.openAutoCtrlCfgWindow)
     self.configureButton(self.configGeneralButton, 
                          self.openCfgGeneralWindow)
-    self.configureButton(self.configNetworkButton, 
-                         self.openCfgNetworkWindow)
 
     self.setFixedSize(QtCore.QSize(800, 480))
     
@@ -149,17 +136,11 @@ class CumulusManager(QtGui.QWidget):
   def openCfgGeneralWindow(self):
     self.generalConfigManager.show()
     
-  def openCfgNetworkWindow(self):
-    pass
-    
   def getHTTPHandler(self):
     return self.httpHandler
     
   def getDataRetrievingManager(self):
     return self.dataRetrievingManager
-  
-  def openAutoCtrlCfgWindow(self):
-    self.autoControlManager.show()
   
   def placeWidgets(self):
     self.labelTitle.move(0, 0)
@@ -189,7 +170,7 @@ class CumulusManager(QtGui.QWidget):
     
   def update(self):
     self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
-    self.autoControlManager.processRequest()
+    self.waterHeaterModule.processRequest()
     
   def nextPage(self):
     if self.currentPageIndex >= len(self.pagesList)-1:
@@ -213,8 +194,8 @@ class CumulusManager(QtGui.QWidget):
     
 app = QtGui.QApplication([])
 
-cumulusManager = CumulusManager()
-cumulusManager.init()
-cumulusManager.show()
+versatyle = Versatyle()
+versatyle.init()
+versatyle.show()
 
 app.exec_()

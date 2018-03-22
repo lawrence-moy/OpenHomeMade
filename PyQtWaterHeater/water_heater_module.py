@@ -2,7 +2,7 @@
 from PySide import QtXml
 import auto_control_window
 
-class AutoControlManager(QtCore.QObject):
+class WaterHeaterModule(QtCore.QObject):
   def __init__(self, _parent):
     QtCore.QObject.__init__(self, parent=_parent)
     self.autoControlWindow = auto_control_window.AutoControlWindow(_parent, self)
@@ -14,6 +14,13 @@ class AutoControlManager(QtCore.QObject):
     
   def init(self):
     self.autoControlWindow.init()
+    
+  def getName(self):
+    return "water_heater"
+    
+  def getCallback(self, name):
+    if "config_dialog" == name:
+      return self.show
     
   def parseXMLParameters(self, element):
     autoCtrlEnabled = element.attribute("enabled", "True")

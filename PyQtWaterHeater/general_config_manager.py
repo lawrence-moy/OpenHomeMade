@@ -10,6 +10,13 @@ class GeneralConfigManager(QtCore.QObject):
   def init(self):
     self.generalConfigWindow.init()
     
+  def getName(self):
+    return "general"
+    
+  def getCallback(self, name):
+    if "config_dialog" == name:
+      return self.show
+      
   def parseXMLParameters(self, element):
     pass
     

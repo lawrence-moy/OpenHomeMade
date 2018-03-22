@@ -41,7 +41,7 @@ class Page():
             self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
             widget.init()
           elif "button" == type:
-            widget = button_widget.ButtonWidget(self.parent.getHTTPHandler())
+            widget = button_widget.ButtonWidget(self.parent)
             widget.loadXMLConfiguration(widgetElement)
             widget.init()
             
