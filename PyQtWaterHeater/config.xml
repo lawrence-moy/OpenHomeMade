@@ -12,9 +12,10 @@
  <AutoControlParameters duration="03:01" hour="20:14" enabled="True"/>
  <Pages>
    <Page title="General">
+     <Widget type="date"                           x="600" y="0"   width="200" height="50" fontWeight="bold" fontColor="blue" fontSize="30" />
      <Widget type="label" text="Température eau :" x="150" y="200" width="150" height="30" fontSize="12" />
      <Widget type="image" path="cumulus.png"       x="330" y="100" width="300" height="300" />
-     <Widget type="value" variable="water_temp"    x="300" y="200" width="50" height="30" />
+     <Widget type="value" variable="water_temp"    x="300" y="200" width="50"  height="30" />
    </Page>
    <Page title="History">
    </Page>

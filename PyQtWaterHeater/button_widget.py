@@ -22,6 +22,10 @@ class ButtonWidget(QtGui.QPushButton, generic_widget.GenericWidget):
     font.setPointSize(int(element.attribute("fontSize", "12")))
     self.setFont(font)
     
+    fontColor  = element.attribute("fontColor", "#000000")
+    fontWeight = element.attribute("fontWeight", "normal")
+    self.setStyleSheet("font-weight: " + fontWeight + "; color: " + fontColor)
+    
     requestNode = element.firstChild()
     while not requestNode.isNull():
       eventElement = requestNode.toElement()

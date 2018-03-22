@@ -12,8 +12,6 @@ class Versatyle(QtGui.QWidget):
     QtGui.QWidget.__init__(self)
     self.labelTitle            = QtGui.QLabel("Water-heater Manager", self)
     self.titleFontSize         = 30
-    self.labelCurrentTime      = QtGui.QLabel("00:00:00", self)
-    self.configGeneralButton   = QtGui.QPushButton("General")
     self.navRightButton        = QtGui.QPushButton(u"\u25b6", self)
     self.navLeftButton         = QtGui.QPushButton(u"\u25c0", self)
     self.httpHandler           = http_handler.HTTPHandler()
@@ -113,25 +111,7 @@ class Versatyle(QtGui.QWidget):
     self.labelTitle.setFont(labelTitleFont)
     self.labelTitle.setStyleSheet("font-weight: bold; color: blue")
     
-    valueFont = QtGui.QFont(self.labelCurrentTime.font())
-    valueFont.setPointSize(self.titleFontSize)
-    self.labelCurrentTime.setFont(valueFont)
-    self.labelCurrentTime.setAlignment(QtCore.Qt.AlignCenter)
-    self.labelCurrentTime.setStyleSheet("font-weight: bold; color: blue")
-                                                         
-    self.configureButton(self.configGeneralButton, 
-                         self.openCfgGeneralWindow)
-
     self.setFixedSize(QtCore.QSize(800, 480))
-    
-  def configureButton(self, button, callback):
-    buttonFont = QtGui.QFont(button.font())
-    buttonFont.setPointSize(30)
-    button.setFont(buttonFont)
-    button.setFixedSize(300, 100)
-    QtCore.QObject.connect(button, 
-                           QtCore.SIGNAL("clicked()"), 
-                           callback)
                            
   def openCfgGeneralWindow(self):
     self.generalConfigManager.show()
@@ -144,7 +124,6 @@ class Versatyle(QtGui.QWidget):
   
   def placeWidgets(self):
     self.labelTitle.move(0, 0)
-    self.labelCurrentTime.move(600, 0)
     
     self.navLeftButton.setFixedSize(45, 400)
     arrowFont = QtGui.QFont(self.navLeftButton.font())
@@ -164,12 +143,11 @@ class Versatyle(QtGui.QWidget):
                            self.nextPage)
     self.navRightButton.move(750, 50)
 
-    self.updateTimeTimer = QtCore.QTimer()
-    QtCore.QObject.connect(self.updateTimeTimer, QtCore.SIGNAL("timeout()"), self.update)
-    self.updateTimeTimer.start(1000)
+    self.updateTimer = QtCore.QTimer()
+    QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.updateModule)
+    self.updateTimer.start(1000)
     
-  def update(self):
-    self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
+  def updateModule(self):
     self.waterHeaterModule.processRequest()
     
   def nextPage(self):

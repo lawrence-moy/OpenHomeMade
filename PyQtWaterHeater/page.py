@@ -3,6 +3,7 @@ import string_value_widget
 import button_widget
 import label_widget
 import image_widget
+import date_widget
 
 class Page():
   def __init__(self, parent, title):
@@ -39,6 +40,8 @@ class Page():
             self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
           elif "button" == type:
             widget = button_widget.ButtonWidget(self.parent)
+          elif "date" == type:
+            widget = date_widget.DateWidget()
             
           widget.loadXMLConfiguration(widgetElement)
           widget.init()
