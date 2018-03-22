@@ -6,10 +6,11 @@ import image_widget
 import date_widget
 
 class Page():
-  def __init__(self, parent, title):
-    self.parent     = parent
-    self.title      = title
-    self.widgetList = []
+  def __init__(self, parent):
+    self.parent          = parent
+    self.title           = ""
+    self.widgetList      = []
+    self.backgroundImage = "" 
 
   def init(self):
     pass
@@ -23,6 +24,8 @@ class Page():
       widget.hide()
     
   def loadXMLConfiguration(self, element):
+    self.title           = element.attribute("title", "")
+    self.backgroundImage = element.attribute("backgroundImage", "")
     widgetNode = element.firstChild()
     while not widgetNode.isNull():
       widgetElement = widgetNode.toElement()
@@ -59,3 +62,5 @@ class Page():
   def getTitle(self):
     return self.title
     
+  def getBackgroundImage(self):
+    return self.backgroundImage

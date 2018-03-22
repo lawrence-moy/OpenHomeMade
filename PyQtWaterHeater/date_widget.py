@@ -11,6 +11,7 @@ class DateWidget(QtGui.QLabel, generic_widget.GenericWidget):
 
   def init(self):
     self.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+    self.update()
     QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.update)
     self.updateTimer.start(1000)
 

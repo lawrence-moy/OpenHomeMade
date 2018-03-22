@@ -78,8 +78,7 @@ class Versatyle(QtGui.QWidget):
       pageElement = pageNode.toElement()
       if not pageElement.isNull():
         if "Page" == pageElement.tagName():
-          title   = pageElement.attribute("title", "")
-          newPage = page.Page(self, title)
+          newPage = page.Page(self)
           newPage.loadXMLConfiguration(pageElement)
           self.pagesList.append(newPage)
       pageNode = pageNode.nextSibling()
@@ -157,6 +156,7 @@ class Versatyle(QtGui.QWidget):
     self.currentPageIndex += 1
     self.pagesList[self.currentPageIndex].show()
     self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
+    self.update()
     
   def previousPage(self):
     if self.currentPageIndex <= 0:
@@ -165,15 +165,20 @@ class Versatyle(QtGui.QWidget):
     self.currentPageIndex -= 1
     self.pagesList[self.currentPageIndex].show()
     self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
+    self.update()
 
   def closeEvent(self, event):
     self.dataRetrievingManager.finish()
     event.accept()
     
+  def paintEvent(self, event):
+    super(Versatyle, self).paintEvent(event)
+    bgImage = self.pagesList[self.currentPageIndex].getBackgroundImage()
+    qpainter = QtGui.QPainter(self)
+    qpainter.drawPixmap(QtCore.QPoint(0,0), QtGui.QPixmap(bgImage)); 
+    
 app = QtGui.QApplication([])
-
 versatyle = Versatyle()
 versatyle.init()
 versatyle.show()
-
 app.exec_()
