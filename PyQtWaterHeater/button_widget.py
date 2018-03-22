@@ -1,24 +1,22 @@
 ﻿from PySide import QtGui 
 from PySide import QtCore
+import generic_widget
 
-class ButtonWidget(QtGui.QPushButton):
+class ButtonWidget(QtGui.QPushButton, generic_widget.GenericWidget):
   def __init__(self, parent):
     QtGui.QPushButton.__init__(self)
-    self.fontSize     = 13
-    self.requestList  = []
+    generic_widget.GenericWidget.__init__(self)
     self.parent       = parent
     self.httpHandler  = parent.getHTTPHandler()
+    self.requestList  = []
     
   def init(self):
     QtCore.QObject.connect(self, 
                            QtCore.SIGNAL("clicked()"), 
                            self.clickedEvent)
-    #buttonFont = QtGui.QFont(button.font())
-    #buttonFont.setPointSize(30)
-    #button.setFont(buttonFont)
-    #button.setFixedSize(300, 100)
     
   def loadXMLConfiguration(self, element):
+    super(ButtonWidget, self).loadXMLConfiguration(element)
     self.setText(element.attribute("text", ""))
     font = self.font()
     font.setPointSize(int(element.attribute("fontSize", "12")))

@@ -2,13 +2,14 @@
 import string_value_widget
 import button_widget
 import label_widget
+import image_widget
 
 class Page():
   def __init__(self, parent, title):
+    self.parent     = parent
     self.title      = title
     self.widgetList = []
-    self.parent     = parent
-    
+
   def init(self):
     pass
     
@@ -30,30 +31,21 @@ class Page():
           widget = None
           if "label" == type:
             widget = label_widget.LabelWidget()
-            widget.loadXMLConfiguration(widgetElement)
-            widget.init()
           elif "image" == type:
-            path   = widgetElement.attribute("path", "")
-            pixmap = QtGui.QPixmap(path)
-            widget = QtGui.QLabel()
-            widget.setPixmap(pixmap)
+            widget = image_widget.ImageWidget()
           elif "value" == type:
-            variable = widgetElement.attribute("variable", "")
-            widget = string_value_widget.StringValueWidget(variable)
+            widget = string_value_widget.StringValueWidget()
+            variable = widget.getVariable()
             self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
-            widget.init()
           elif "button" == type:
             widget = button_widget.ButtonWidget(self.parent)
-            widget.loadXMLConfiguration(widgetElement)
-            widget.init()
             
-          x      = int(widgetElement.attribute("x", "0"))
-          y      = int(widgetElement.attribute("y", "0"))
-          width  = int(widgetElement.attribute("width", "50"))
-          height = int(widgetElement.attribute("height", "50"))
+          widget.loadXMLConfiguration(widgetElement)
+          widget.init()
+            
           widget.setParent(self.parent)
-          widget.move(x, y)
-          widget.setFixedSize(width, height)
+          widget.move(widget.getX(), widget.getY())
+          widget.setFixedSize(widget.getWidth(), widget.getHeight())
           widget.hide()
           self.widgetList.append(widget)
       widgetNode = widgetNode.nextSibling()
