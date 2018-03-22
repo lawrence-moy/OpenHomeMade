@@ -20,6 +20,10 @@ class ButtonWidget(QtGui.QPushButton):
     
   def loadXMLConfiguration(self, element):
     self.setText(element.attribute("text", ""))
+    font = self.font()
+    font.setPointSize(int(element.attribute("fontSize", "12")))
+    self.setFont(font)
+    
     requestNode = element.firstChild()
     while not requestNode.isNull():
       eventElement = requestNode.toElement()

@@ -1,6 +1,7 @@
 ﻿from PySide import QtGui
 import string_value_widget
 import button_widget
+import label_widget
 
 class Page():
   def __init__(self, parent, title):
@@ -28,12 +29,13 @@ class Page():
           type = widgetElement.attribute("type", "")
           widget = None
           if "label" == type:
-            text   = widgetElement.attribute("text", "")
-            widget = QtGui.QLabel(text)
+            widget = label_widget.LabelWidget()
+            widget.loadXMLConfiguration(widgetElement)
+            widget.init()
           elif "image" == type:
             path   = widgetElement.attribute("path", "")
             pixmap = QtGui.QPixmap(path)
-            widget = QtGui.QLabel(text)
+            widget = QtGui.QLabel()
             widget.setPixmap(pixmap)
           elif "value" == type:
             variable = widgetElement.attribute("variable", "")
