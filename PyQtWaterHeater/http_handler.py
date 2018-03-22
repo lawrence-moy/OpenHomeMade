@@ -8,12 +8,8 @@ class HTTPHandler(QtCore.QObject):
     self.offRequestParam  = (None, None)
     
     self.postManager = QtNetwork.QNetworkAccessManager(self)
-    self.getManager = QtNetwork.QNetworkAccessManager(self)
-    
-    #self.comStateCumulusLabel = QtGui.QLabel("Etat COM Cumulus :")
-    #self.comStateCounterLabel = QtGui.QLabel("Etat COM Compteur :")
-    #self.comStatePylierLabel  = QtGui.QLabel("Etat COM Pylier :")
-    
+    self.getManager  = QtNetwork.QNetworkAccessManager(self)
+     
   def setupGUI(self):
     pass
     
@@ -63,4 +59,4 @@ class HTTPHandler(QtCore.QObject):
     request = QtNetwork.QNetworkRequest(url)
     print("GET:", urlPath)
     self.getManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
-    self.postManager.get(request)
+    self.getManager.get(request)

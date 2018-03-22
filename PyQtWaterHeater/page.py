@@ -1,10 +1,10 @@
 ﻿from PySide import QtGui
 import string_value_widget
+import button_widget
 
 class Page():
   def __init__(self, parent, title):
     self.title      = title
-    self.gridLayout = QtGui.QGridLayout()
     self.widgetList = []
     self.parent     = parent
     
@@ -40,6 +40,11 @@ class Page():
             widget = string_value_widget.StringValueWidget(variable)
             self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
             widget.init()
+          elif "button" == type:
+            widget = button_widget.ButtonWidget(self.parent.getHTTPHandler())
+            widget.loadXMLConfiguration(widgetElement)
+            widget.init()
+            
           x      = int(widgetElement.attribute("x", "0"))
           y      = int(widgetElement.attribute("y", "0"))
           width  = int(widgetElement.attribute("width", "50"))
@@ -47,7 +52,7 @@ class Page():
           widget.setParent(self.parent)
           widget.move(x, y)
           widget.setFixedSize(width, height)
-          widget.show()
+          widget.hide()
           self.widgetList.append(widget)
       widgetNode = widgetNode.nextSibling()
   

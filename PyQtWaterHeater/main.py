@@ -18,8 +18,6 @@ class CumulusManager(QtGui.QWidget):
     self.titleFontSize    = 30
 
     self.labelCurrentTime    = QtGui.QLabel("00:00:00", self)
-    self.forceOnButton       = QtGui.QPushButton("Force ON")
-    self.forceOffButton      = QtGui.QPushButton("Force OFF")
     self.configAutoButton    = QtGui.QPushButton("Timetable")
     self.configGeneralButton = QtGui.QPushButton("General")
     self.configNetworkButton = QtGui.QPushButton("Network")
@@ -47,23 +45,12 @@ class CumulusManager(QtGui.QWidget):
     self.delayWidget.init()
     self.electricControlWidget.init()
     
-    self.initPages()
-    
     self.loadXMLConfiguration()
     self.setupGUI()
     self.placeWidgets()
     
     self.autoControlManager.init()
     self.dataRetrievingManager.init()
-    
-  def initPages(self):
-    configPage = page.Page(self, "Configuration")
-    #configPage.init()
-    #configPage.addWidget(self.forceOnButton,           0, 0, 1, 1)
-    #configPage.addWidget(self.forceOffButton,          0, 1, 1, 1)
-    #configPage.addWidget(self.configAutoButton,        1, 0, 1, 1)
-    #configPage.addWidget(self.configGeneralButton,     1, 1, 1, 1)
-    #configPage.addWidget(self.configNetworkButton,     2, 0, 1, 1)
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -140,11 +127,7 @@ class CumulusManager(QtGui.QWidget):
     self.labelCurrentTime.setFont(valueFont)
     self.labelCurrentTime.setAlignment(QtCore.Qt.AlignCenter)
     self.labelCurrentTime.setStyleSheet("font-weight: bold; color: blue")
-                               
-    self.configureButton(self.forceOnButton, 
-                         self.forceOnCommand)                         
-    self.configureButton(self.forceOffButton, 
-                         self.forceOffCommand)                           
+                                                         
     self.configureButton(self.configAutoButton, 
                          self.openAutoCtrlCfgWindow)
     self.configureButton(self.configGeneralButton, 
@@ -207,12 +190,6 @@ class CumulusManager(QtGui.QWidget):
   def update(self):
     self.labelCurrentTime.setText(QtCore.QDateTime.currentDateTime().toString("hh:mm:ss"))
     self.autoControlManager.processRequest()
-    
-  def forceOnCommand(self):
-    self.autoControlManager.switchOnCommand()
-
-  def forceOffCommand(self):
-    self.autoControlManager.switchOffCommand()
     
   def nextPage(self):
     if self.currentPageIndex >= len(self.pagesList)-1:
