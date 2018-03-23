@@ -12,16 +12,20 @@
  <AutoControlParameters duration="03:01" hour="20:14" enabled="True"/>
  <Pages>
    <Page title="General" backgroundImage="background.jpg">
-     <Widget type="date"                           x="600" y="0"   width="200" height="50" fontWeight="bold" fontColor="blue" fontSize="30" />
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
      <Widget type="label" text="Température eau :" x="150" y="200" width="150" height="30" fontSize="12" />
      <Widget type="image" path="cumulus.png"       x="330" y="100" width="300" height="300" />
      <Widget type="value" variable="water_temp"    x="300" y="200" width="50"  height="30" />
    </Page>
-   <Page title="History">
-     <Widget type="date" x="600" y="0"   width="200" height="50" fontWeight="bold" fontColor="blue" fontSize="30" />
+   <Page title="History" backgroundImage="background.jpg">
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+     
    </Page>
-   <Page title="Configuration">
-     <Widget type="date" x="600" y="0"   width="200" height="50" fontWeight="bold" fontColor="blue" fontSize="30" />
+   <Page title="Configuration" backgroundImage="background.jpg">
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
      <Widget type="button" text="Force ON" x="80" y="80" width="300" height="100" fontSize="30">
        <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>

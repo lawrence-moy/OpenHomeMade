@@ -4,6 +4,7 @@ import button_widget
 import label_widget
 import image_widget
 import date_widget
+import page_title_widget
 
 class Page():
   def __init__(self, parent):
@@ -45,6 +46,9 @@ class Page():
             widget = button_widget.ButtonWidget(self.parent)
           elif "date" == type:
             widget = date_widget.DateWidget()
+          elif "page_title" == type:
+            widget = page_title_widget.PageTitleWidget()
+            self.parent.registerPageTitleConsumer(widget)
             
           widget.loadXMLConfiguration(widgetElement)
           widget.init()

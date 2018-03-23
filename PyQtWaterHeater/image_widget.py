@@ -15,6 +15,6 @@ class ImageWidget(QtGui.QLabel, generic_widget.GenericWidget):
     
   def paintEvent(self, event):
     super(ImageWidget, self).paintEvent(event)
-    p = QtGui.QPainter(self)
-    p.drawRoundedRect(0, 0, self.width()-1, self.height()-1, 3, 3)
+    #p = QtGui.QPainter(self)
+    #p.drawRoundedRect(0, 0, self.width()-1, self.height()-1, 3, 3)
     

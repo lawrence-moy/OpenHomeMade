@@ -10,8 +10,6 @@ import page
 class Versatyle(QtGui.QWidget):
   def __init__(self):
     QtGui.QWidget.__init__(self)
-    self.labelTitle            = QtGui.QLabel("Water-heater Manager", self)
-    self.titleFontSize         = 30
     self.navRightButton        = QtGui.QPushButton(u"\u25b6", self)
     self.navLeftButton         = QtGui.QPushButton(u"\u25c0", self)
     self.httpHandler           = http_handler.HTTPHandler()
@@ -20,6 +18,8 @@ class Versatyle(QtGui.QWidget):
     self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
     self.modulesDict           = {}
     self.pagesList             = []
+    self.pageTitleConsumers    = []
+    self.currentPageIndex      = 0
     
   def init(self):
     self.generalConfigManager.init()
@@ -70,6 +70,9 @@ class Versatyle(QtGui.QWidget):
       
   def getModule(self, name):
     return self.modulesDict.get(name)
+    
+  def registerPageTitleConsumer(self, widget):
+    self.pageTitleConsumers.append(widget)
       
   def loadPages(self, element):
     self.pagesList = []
@@ -82,10 +85,8 @@ class Versatyle(QtGui.QWidget):
           newPage.loadXMLConfiguration(pageElement)
           self.pagesList.append(newPage)
       pageNode = pageNode.nextSibling()
-
-    self.currentPageIndex = 0
-    self.pagesList[self.currentPageIndex].show()
-      
+    self.processPageChanged()
+    
   def saveXMLConfiguration(self):
     doc = QtXml.QDomDocument("Configuration")
     rootNode = doc.createElement("Config")
@@ -105,11 +106,6 @@ class Versatyle(QtGui.QWidget):
     outFile.close()
     
   def setupGUI(self):
-    labelTitleFont = QtGui.QFont(self.labelTitle.font())
-    labelTitleFont.setPointSize(self.titleFontSize)
-    self.labelTitle.setFont(labelTitleFont)
-    self.labelTitle.setStyleSheet("font-weight: bold; color: blue")
-    
     self.setFixedSize(QtCore.QSize(800, 480))
                            
   def openCfgGeneralWindow(self):
@@ -122,8 +118,6 @@ class Versatyle(QtGui.QWidget):
     return self.dataRetrievingManager
   
   def placeWidgets(self):
-    self.labelTitle.move(0, 0)
-    
     self.navLeftButton.setFixedSize(45, 400)
     arrowFont = QtGui.QFont(self.navLeftButton.font())
     arrowFont.setPointSize(50)
@@ -131,7 +125,7 @@ class Versatyle(QtGui.QWidget):
     QtCore.QObject.connect(self.navLeftButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.previousPage)
-    self.navLeftButton.move(5, 50)
+    self.navLeftButton.move(5, 60)
 
     self.navRightButton.setFixedSize(45, 400)
     arrowFont = QtGui.QFont(self.navRightButton.font())
@@ -140,7 +134,7 @@ class Versatyle(QtGui.QWidget):
     QtCore.QObject.connect(self.navRightButton, 
                            QtCore.SIGNAL("clicked()"), 
                            self.nextPage)
-    self.navRightButton.move(750, 50)
+    self.navRightButton.move(750, 60)
 
     self.updateTimer = QtCore.QTimer()
     QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.updateModule)
@@ -154,17 +148,20 @@ class Versatyle(QtGui.QWidget):
         return
     self.pagesList[self.currentPageIndex].hide()
     self.currentPageIndex += 1
-    self.pagesList[self.currentPageIndex].show()
-    self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
-    self.update()
+    self.processPageChanged()
     
   def previousPage(self):
     if self.currentPageIndex <= 0:
         return
     self.pagesList[self.currentPageIndex].hide()
     self.currentPageIndex -= 1
+    self.processPageChanged()  
+    
+  def processPageChanged(self):
     self.pagesList[self.currentPageIndex].show()
-    self.labelTitle.setText(self.pagesList[self.currentPageIndex].getTitle())
+    title = self.pagesList[self.currentPageIndex].getTitle()
+    for consumer in self.pageTitleConsumers:
+      consumer.setText(title)
     self.update()
 
   def closeEvent(self, event):
@@ -175,7 +172,7 @@ class Versatyle(QtGui.QWidget):
     super(Versatyle, self).paintEvent(event)
     bgImage = self.pagesList[self.currentPageIndex].getBackgroundImage()
     qpainter = QtGui.QPainter(self)
-    qpainter.drawPixmap(QtCore.QPoint(0,0), QtGui.QPixmap(bgImage)); 
+    qpainter.drawPixmap(QtCore.QPoint(0,0), QtGui.QPixmap(bgImage))
     
 app = QtGui.QApplication([])
 versatyle = Versatyle()
