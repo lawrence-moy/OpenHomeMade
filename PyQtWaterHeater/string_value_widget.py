@@ -27,7 +27,6 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
     return self.variableName
     
   def setValue(self, value):
-    print(">", value)
     self.setText(str(value))
     
   def paintEvent(self, event):

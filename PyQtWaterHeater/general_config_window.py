@@ -57,5 +57,5 @@ class GeneralConfigWindow(QtGui.QDialog):
     #self.autoCtrlManager.setSwitchOnTime(self.startTime.dateTime())
     #self.autoCtrlManager.setDurationTime(self.duration.time())
     self.hide()
-    self.autoCtrlManager.newConfigEvent()
+    #self.autoCtrlManager.newConfigEvent()
       

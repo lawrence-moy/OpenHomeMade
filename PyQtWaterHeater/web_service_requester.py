@@ -34,7 +34,5 @@ class WebServiceRequester(threading.Thread):
       moduleId = int(moduleIdStr)
       for variableName in module.keys():
         value = module[variableName]
-        if "io10" == variableName:
-          print("Send:", (moduleId, variableName, value))
         self.queue.put((moduleId, variableName, value))
     
