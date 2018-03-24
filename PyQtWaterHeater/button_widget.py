@@ -51,4 +51,4 @@ class ButtonWidget(QtGui.QPushButton, generic_widget.GenericWidget):
       self.httpHandler.post(url, body, self.replyCallback)
   
   def replyCallback(self, reply):
-    print(reply)
+    print(reply.readAll())

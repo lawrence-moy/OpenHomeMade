@@ -39,9 +39,7 @@ class Page():
           elif "image" == type:
             widget = image_widget.ImageWidget()
           elif "value" == type:
-            widget = string_value_widget.StringValueWidget()
-            variable = widget.getVariable()
-            self.parent.getDataRetrievingManager().registerConsumer(widget, variable)
+            widget = string_value_widget.StringValueWidget(self.parent.getDataRetrievingManager())
           elif "button" == type:
             widget = button_widget.ButtonWidget(self.parent)
           elif "date" == type:

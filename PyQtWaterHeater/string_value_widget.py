@@ -3,10 +3,11 @@ from PySide import QtCore
 import generic_widget
 
 class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
-  def __init__(self):
+  def __init__(self, dataRetrievingManager):
     QtGui.QLabel.__init__(self)
     generic_widget.GenericWidget.__init__(self)
-    self.variableName = ""
+    self.variableName          = ""
+    self.dataRetrievingManager = dataRetrievingManager
     
   def init(self):
     self.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
@@ -14,6 +15,7 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
   def loadXMLConfiguration(self, element):
     super(StringValueWidget, self).loadXMLConfiguration(element)
     self.variableName = element.attribute("variable", "")
+    self.dataRetrievingManager.registerConsumer(self, self.variableName)
     font = self.font()
     font.setPointSize(int(element.attribute("fontSize", "12")))
     self.setFont(font)
@@ -25,6 +27,7 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
     return self.variableName
     
   def setValue(self, value):
+    print(">", value)
     self.setText(str(value))
     
   def paintEvent(self, event):

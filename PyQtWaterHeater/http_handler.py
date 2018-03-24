@@ -1,15 +1,18 @@
 ﻿from PySide import QtCore
 from PySide import QtNetwork
+import sys
+if sys.version_info[0] < 3:
+  import urllib2
+  import urllib
+else:
+  import urllib.request
 
 class HTTPHandler(QtCore.QObject):
   def __init__(self):
     QtCore.QObject.__init__(self)
     self.onRequestParam   = (None, None)
     self.offRequestParam  = (None, None)
-    
-    self.postManager = QtNetwork.QNetworkAccessManager(self)
-    self.getManager  = QtNetwork.QNetworkAccessManager(self)
-     
+
   def setupGUI(self):
     pass
     
@@ -47,16 +50,30 @@ class HTTPHandler(QtCore.QObject):
     return self.offRequestParam
     
   def post(self, urlPath, data, replyCallback):
-    url = QtCore.QUrl(urlPath)
-    request = QtNetwork.QNetworkRequest(url)
-    request.setHeader(QtNetwork.QNetworkRequest.ContentTypeHeader, "application/json")
-    print("POST:", replyCallback)
-    self.postManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
-    self.postManager.post(request, data)
-    
-  def get(self, urlPath, replyCallback):
-    url = QtCore.QUrl(urlPath)
-    request = QtNetwork.QNetworkRequest(url)
-    print("GET:", urlPath)
-    self.getManager.finished[QtNetwork.QNetworkReply].connect(replyCallback)
-    self.getManager.get(request)
+    try:
+      if sys.version_info[0] < 3:
+        request = urllib2.Request(urlPath, data)
+        response = urllib2.urlopen(request)
+        json = response.read()
+        print(json)
+      else:
+        x = urllib.request.urlopen(urlPath)
+        print(x.read())
+    except:
+      print("Ooops")
+      
+  def get(self, urlPath):
+    try:
+      if sys.version_info[0] < 3:
+        response = urllib2.urlopen(urlPath)
+        #print(response.info())
+        json = response.read()
+        #print(json)
+        response.close()
+        return json
+      else:
+        response = urllib.request.urlopen(urlPath)
+        print(response.read())
+    except:
+      print("Ooops")
+      return None

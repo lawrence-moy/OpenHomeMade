@@ -1,33 +1,36 @@
 ﻿from PySide import QtCore
 from Queue import Queue
 import web_service_requester
+import threading
+import time
 
-class DataRetrievingManager(QtCore.QObject):
+class DataRetrievingManager(threading.Thread):
   def __init__(self, _parent):
-    QtCore.QObject.__init__(self, parent=_parent)
+    threading.Thread.__init__(self)
     self.service = None
     self.consumers = {}
     self.queue = Queue()
+    self.parent = _parent
+    self.exiting = False
 
   def init(self):
-    self.dataRetrievingTimer = QtCore.QTimer()
-    QtCore.QObject.connect(self.dataRetrievingTimer, QtCore.SIGNAL("timeout()"), self.processData)
-    self.dataRetrievingTimer.start(100)  
+    pass
     
-  def processData(self):
-    while not self.queue.empty():
-      key, value = self.queue.get()
-      if None == self.consumers.get(key):
-        return
-      for consumer in self.consumers.get(key):
-        consumer.setValue(value)
-    
+  def run(self):
+    while False == self.exiting:
+      while not self.queue.empty():
+        moduleId, key, value = self.queue.get()
+        if None == self.consumers.get(key):
+          continue
+        for consumer in self.consumers.get(key):
+          consumer.setValue(value)
+      time.sleep(0.05)
+
   def finish(self):
     self.service.stop()
-    if not self.service.wait(3000):
-      self.service.terminate()
-      self.service.wait()
-      
+    self.service.join()
+    self.exiting = True
+
   def registerConsumer(self, widget, variableName):
     if None == self.consumers.get(variableName):
       self.consumers[variableName] = []
@@ -42,7 +45,8 @@ class DataRetrievingManager(QtCore.QObject):
         if "WebService" == serviceElement.tagName():
            url      = serviceElement.attribute("url", "")
            interval = float(serviceElement.attribute("interval", "1"))
-           webService = web_service_requester.WebServiceRequester(self.queue, self, url, interval)
+           webService = web_service_requester.WebServiceRequester(self.queue,
+                                                                  url, interval)
            webService.start()
            self.service = webService
       subDataRetrievingNode = subDataRetrievingNode.nextSibling()
@@ -51,7 +55,7 @@ class DataRetrievingManager(QtCore.QObject):
     pass
     
   def newConfigEvent(self):
-    self.parent().saveXMLConfiguration()
+    self.parent.saveXMLConfiguration()
     
   def show(self):
     pass

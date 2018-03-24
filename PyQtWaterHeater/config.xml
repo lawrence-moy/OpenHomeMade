@@ -16,7 +16,7 @@
      <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
      <Widget type="label" text="Température eau :" x="150" y="200" width="150" height="30" fontSize="12" />
      <Widget type="image" path="cumulus.png"       x="330" y="100" width="300" height="300" />
-     <Widget type="value" variable="water_temp"    x="300" y="200" width="50"  height="30" />
+     <Widget type="value" variable="io10"          x="300" y="200" width="50"  height="30" />
    </Page>
    <Page title="History" backgroundImage="background.jpg">
      <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
@@ -30,7 +30,7 @@
        <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>
      <Widget type="button" text="Force OFF" x="420" y="80" width="300" height="100" fontSize="30">
-       <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
+       <HTTPPostRequest body="[{'ref':1, 'set_output10':0}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>
      <Widget type="button" text="AUTO ON/OFF" x="80" y="200" width="300" height="100" fontSize="30">
        <ModuleEvent module="water_heater" event="config_dialog" />

@@ -33,6 +33,7 @@ class Versatyle(QtGui.QWidget):
     self.placeWidgets()
     
     self.dataRetrievingManager.init()
+    self.dataRetrievingManager.start()
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
