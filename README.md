@@ -6,3 +6,6 @@ This project is a part of OpenGTC project with aim propose an open-source softwa
 Versatyle is a minimalist supervisor, it allow to realize a graphical control/command.
 Fully configurable by XML file, the GUI is designed for touchscreens.
 I propose you a first example of these capabilities, with a configuration to manage an electric water-heater.
+
+![Versatyle](https://raw.githubusercontent.com/lawrence-moy/Versatyle/master/PyQtWaterHeater/screenshot/capture1.png)
+
