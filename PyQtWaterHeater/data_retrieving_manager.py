@@ -1,5 +1,9 @@
 ﻿from PySide import QtCore
-from Queue import Queue
+import sys
+if sys.version_info[0] < 3:
+  from Queue import Queue
+else:
+  import queue
 import web_service_requester
 import threading
 import time
@@ -9,7 +13,10 @@ class DataRetrievingManager(threading.Thread):
     threading.Thread.__init__(self)
     self.service = None
     self.consumers = {}
-    self.queue = Queue()
+    if sys.version_info[0] < 3:
+      self.queue = Queue()
+    else:
+      self.queue = queue.Queue()
     self.parent = _parent
     self.exiting = False
 

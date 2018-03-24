@@ -1,5 +1,4 @@
 ﻿from PySide import QtCore
-from PySide import QtNetwork
 import sys
 if sys.version_info[0] < 3:
   import urllib2
@@ -55,25 +54,26 @@ class HTTPHandler(QtCore.QObject):
         request = urllib2.Request(urlPath, data)
         response = urllib2.urlopen(request)
         json = response.read()
-        print(json)
       else:
-        x = urllib.request.urlopen(urlPath)
-        print(x.read())
+        data = data.encode('utf-8')
+        request = urllib.request.Request(urlPath, data)
+        response = urllib.request.urlopen(request)
+        #print(response.read())
     except:
-      print("Ooops")
+      print("Error:", sys.exc_info()[0])
       
   def get(self, urlPath):
     try:
       if sys.version_info[0] < 3:
         response = urllib2.urlopen(urlPath)
-        #print(response.info())
         json = response.read()
-        #print(json)
         response.close()
         return json
       else:
         response = urllib.request.urlopen(urlPath)
-        print(response.read())
+        json = response.read()
+        response.close()
+        return json
     except:
-      print("Ooops")
+      print("Error:", sys.exc_info()[0])
       return None
