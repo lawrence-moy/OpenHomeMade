@@ -12,8 +12,8 @@
  <AutoControlParameters duration="03:01" hour="20:14" enabled="True"/>
  <Pages>
    <Page title="General" backgroundImage="images/background2.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
      
      <Widget type="image" path="images/resistance_title.png" x="90" y="90" width="202" height="24" />
      <Widget type="label" text="Power supply :"    x="90" y="120" width="150" height="30" fontSize="12" />
@@ -27,20 +27,20 @@
      <Widget type="label" text="Water temperature :" x="90" y="330" width="150" height="30" fontSize="12" />
      <Widget type="value" moduleId="1" variable="io10"          x="240" y="330" width="55"  height="30" fontWeight="bold" />
   
-     <Widget type="image" path="water_heater.png"  x="300" y="50" width="300" height="400" />
+     <Widget type="image" path="images/water_heater.png"  x="300" y="50" width="300" height="400" />
      
      <Widget type="image" path="images/cold_water_title.png" x="520" y="300" width="202" height="24" />
      <Widget type="label" text="Water temperature :" x="520" y="330" width="150" height="30" fontSize="12" />
      <Widget type="value" moduleId="1" variable="io10"          x="670" y="330" width="55"  height="30" fontWeight="bold" />
    </Page>
-   <Page title="History" backgroundImage="background.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+   <Page title="History" backgroundImage="images/background.jpg">
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
      
    </Page>
-   <Page title="Configuration" backgroundImage="background.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>
+   <Page title="Configuration" backgroundImage="images/background.jpg">
+     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
+     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
      <Widget type="button" text="Force ON" x="80" y="80" width="300" height="100" fontSize="30">
        <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>

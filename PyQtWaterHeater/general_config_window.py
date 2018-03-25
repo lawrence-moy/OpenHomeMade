@@ -28,7 +28,7 @@ class GeneralConfigWindow(QtGui.QDialog):
     buttonFont = QtGui.QFont(self.validateButton.font())
     buttonFont.setPointSize(30)
     self.validateButton.setFont(buttonFont)
-    self.validateButton.setIcon(QtGui.QIcon("ok.png"));
+    self.validateButton.setIcon(QtGui.QIcon("images/ok.png"));
     self.validateButton.setIconSize(QtCore.QSize(50, 50));
 
     QtCore.QObject.connect(self.validateButton, 
