@@ -17,7 +17,7 @@
      
      <Widget type="image" path="images/resistance_title.png" x="90" y="90" width="202" height="24" />
      <Widget type="label" text="Power supply :"    x="90" y="120" width="150" height="30" fontSize="12" />
-     <Widget type="value" variable="io10"          x="240" y="120" width="55"  height="30" fontWeight="bold" />
+     <Widget type="value" moduleId="1" variable="io10"          x="240" y="120" width="55"  height="30" fontWeight="bold" />
      <Widget type="label" text="Next switch ON :"  x="90" y="155" width="205" height="30" fontSize="12" />
      <Widget type="label" text=" -- -- --"  x="90" y="185" width="205" height="30" fontSize="12" />
      <Widget type="label" text="Next switch OFF :"  x="90" y="220" width="205" height="30" fontSize="12" />
@@ -25,13 +25,13 @@
      
      <Widget type="image" path="images/heat_water_title.png" x="90" y="300" width="202" height="24" />
      <Widget type="label" text="Water temperature :" x="90" y="330" width="150" height="30" fontSize="12" />
-     <Widget type="value" variable="io10"          x="240" y="330" width="55"  height="30" fontWeight="bold" />
+     <Widget type="value" moduleId="1" variable="io10"          x="240" y="330" width="55"  height="30" fontWeight="bold" />
   
      <Widget type="image" path="water_heater.png"  x="300" y="50" width="300" height="400" />
      
      <Widget type="image" path="images/cold_water_title.png" x="520" y="300" width="202" height="24" />
      <Widget type="label" text="Water temperature :" x="520" y="330" width="150" height="30" fontSize="12" />
-     <Widget type="value" variable="io10"          x="670" y="330" width="55"  height="30" fontWeight="bold" />
+     <Widget type="value" moduleId="1" variable="io10"          x="670" y="330" width="55"  height="30" fontWeight="bold" />
    </Page>
    <Page title="History" backgroundImage="background.jpg">
      <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="bg_title.jpg"/>

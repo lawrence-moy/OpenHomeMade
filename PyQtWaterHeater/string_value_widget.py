@@ -14,8 +14,9 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
     
   def loadXMLConfiguration(self, element):
     super(StringValueWidget, self).loadXMLConfiguration(element)
+    self.moduleId     = int(element.attribute("moduleId", ""))
     self.variableName = element.attribute("variable", "")
-    self.dataRetrievingManager.registerConsumer(self, self.variableName)
+    self.dataRetrievingManager.registerConsumer(self, self.moduleId, self.variableName)
     font = self.font()
     font.setPointSize(int(element.attribute("fontSize", "12")))
     self.setFont(font)

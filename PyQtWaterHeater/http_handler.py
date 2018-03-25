@@ -1,14 +1,12 @@
-﻿from PySide import QtCore
-import sys
+﻿import sys
 if sys.version_info[0] < 3:
   import urllib2
   import urllib
 else:
   import urllib.request
 
-class HTTPHandler(QtCore.QObject):
+class HTTPHandler():
   def __init__(self):
-    QtCore.QObject.__init__(self)
     self.onRequestParam   = (None, None)
     self.offRequestParam  = (None, None)
 

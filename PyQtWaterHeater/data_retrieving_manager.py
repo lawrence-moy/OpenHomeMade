@@ -1,5 +1,4 @@
-﻿from PySide import QtCore
-import sys
+﻿import sys
 if sys.version_info[0] < 3:
   from Queue import Queue
 else:
@@ -26,10 +25,12 @@ class DataRetrievingManager(threading.Thread):
   def run(self):
     while False == self.exiting:
       while not self.queue.empty():
-        moduleId, key, value = self.queue.get()
-        if None == self.consumers.get(key):
+        moduleId, varName, value = self.queue.get()
+        if None == self.consumers.get(moduleId):
           continue
-        for consumer in self.consumers.get(key):
+        if None == self.consumers[moduleId].get(varName):
+          continue  
+        for consumer in self.consumers[moduleId].get(varName):
           consumer.setValue(value)
       time.sleep(0.05)
 
@@ -38,11 +39,13 @@ class DataRetrievingManager(threading.Thread):
     self.service.join()
     self.exiting = True
 
-  def registerConsumer(self, widget, variableName):
-    if None == self.consumers.get(variableName):
-      self.consumers[variableName] = []
-    print("register consumer: ", variableName, widget)
-    self.consumers[variableName].append(widget)
+  def registerConsumer(self, widget, moduleId, variableName):
+    if None == self.consumers.get(moduleId):
+      self.consumers[moduleId] = {}
+    if None == self.consumers[moduleId].get(variableName):
+      self.consumers[moduleId][variableName] = []
+    print("register consumer: ", moduleId, variableName, widget)
+    self.consumers[moduleId][variableName].append(widget)
     
   def parseXMLParameters(self, element):
     subDataRetrievingNode = element.firstChild()
