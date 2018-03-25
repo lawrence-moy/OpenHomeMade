@@ -1,11 +1,16 @@
 # Versatyle
 
-Welcome to the Versatyle project page.
+Welcome to the Versatyle project
 
-This project is a part of OpenGTC project with aim propose an open-source software suite to manager your habitation.
-Versatyle is a minimalist supervisor, it allow to realize a graphical control/command.
+This project is part of "OpenGTC" project. The aim is to propose an open-source suitable software to manage your house equipements. 
+Versatyle is a minimalist supervisor: it allows to make a graphical control/command.
 Fully configurable by XML file, the GUI is designed for touchscreens.
-I propose you a first example of these capabilities, with a configuration to manage an electric water-heater.
+
+I propose you a first example of its capabilities, with a configuration to manage an electric water-heater.
 
 ![Versatyle](https://raw.githubusercontent.com/lawrence-moy/Versatyle/master/PyQtWaterHeater/screenshot/capture1.png)
+
+Versatyle requires somme dependances to run:
+- Python 3.x interpreter (Work fine with a python 2.7 but I recommand you a 3.x for future).
+- PySide (Python bindings for the Qt 4).
 
