@@ -13,15 +13,18 @@ class Versatyle(QtGui.QWidget):
     self.navRightButton        = QtGui.QPushButton(u"\u25b6", self)
     self.navLeftButton         = QtGui.QPushButton(u"\u25c0", self)
     self.httpHandler           = http_handler.HTTPHandler()
+    self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
     self.waterHeaterModule     = water_heater_module.WaterHeaterModule(self)
     self.generalConfigManager  = general_config_manager.GeneralConfigManager(self)
-    self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
     self.modulesDict           = {}
     self.pagesList             = []
     self.pageTitleConsumers    = []
     self.currentPageIndex      = 0
     
   def init(self):
+    self.dataRetrievingManager.init()
+    self.dataRetrievingManager.start()
+  
     self.generalConfigManager.init()
     self.registerModule(self.generalConfigManager)
     
@@ -33,9 +36,6 @@ class Versatyle(QtGui.QWidget):
     self.setWindowTitle("Versatyle")
     self.setFixedSize(QtCore.QSize(800, 480))
     self.placeWidgets()
-    
-    self.dataRetrievingManager.init()
-    self.dataRetrievingManager.start()
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -89,13 +89,9 @@ class Versatyle(QtGui.QWidget):
   def saveXMLConfiguration(self):
     doc = QtXml.QDomDocument("Configuration")
     rootNode = doc.createElement("Config")
-
-    networkNode = self.httpHandler.getXMLConfiguration(doc)
-    rootNode.appendChild(networkNode)
     onOffParamNode = self.waterHeaterModule.getXMLConfiguration(doc)
     rootNode.appendChild(onOffParamNode)
     doc.appendChild(rootNode)
-    
     outFile = QtCore.QFile("config/config.xml")
     if not outFile.open(QtCore.QIODevice.WriteOnly | QtCore.QIODevice.Text ):
       print("Failed to open file for writing.")

@@ -41,8 +41,9 @@
      </Widget>
      <Widget type="value">
        <Geometry x="90" y="185" width="205" height="30" />
-       <Font size="12" />
+       <Font weight="bold" size="12" />
        <Background color="#ff00ff" alpha="30" />
+       <Value moduleId="-1" variable="next_switch_on_date" />
      </Widget>
      <Widget type="label">
        <Geometry x="90" y="220" width="205" height="30" />
@@ -51,8 +52,9 @@
      </Widget>
      <Widget type="value">
        <Geometry x="90" y="250" width="205" height="30" />
-       <Font size="12" />
+       <Font weight="bold" size="12" />
        <Background color="#ff00ff" alpha="30" />
+       <Value moduleId="-1" variable="next_switch_off_date" />
      </Widget>
      <Widget type="image">
        <Geometry x="90" y="300" width="202" height="24" />

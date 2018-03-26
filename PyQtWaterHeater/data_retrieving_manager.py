@@ -38,6 +38,9 @@ class DataRetrievingManager(threading.Thread):
     self.service.stop()
     self.service.join()
     self.exiting = True
+    
+  def getQueue(self):
+    return self.queue
 
   def registerConsumer(self, widget, moduleId, variableName):
     if None == self.consumers.get(moduleId):

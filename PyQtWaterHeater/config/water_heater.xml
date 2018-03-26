@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE Configuration>
 <Config>
- <WaterHeater duration="03:01" hour="20:14" enabled="True"/>
+ <WaterHeater duration="03:01" hour="20:16" enabled="True">
     <OnRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
-    <OffRequest body="[{'ref':0, 'set_output10':0}]" url="http://192.168.200.99/gtc/appareils.json"/>
+    <OffRequest body="[{'ref':1, 'set_output10':0}]" url="http://192.168.200.99/gtc/appareils.json"/>
  </WaterHeater>
 </Config>

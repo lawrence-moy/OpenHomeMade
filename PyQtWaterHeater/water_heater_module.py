@@ -1,12 +1,13 @@
 ﻿from PySide import QtCore
 from PySide import QtXml
 import auto_control_window
+import http_handler
 
 class WaterHeaterModule(QtCore.QObject):
   def __init__(self, _parent):
     QtCore.QObject.__init__(self, parent=_parent)
     self.autoControlWindow = auto_control_window.AutoControlWindow(_parent, self)
-    self.httpHandler       = _parent.getHTTPHandler()
+    self.httpHandler       = http_handler.HTTPHandler()
     self.onTime            = None
     self.offTime           = None
     self.durationTime      = None
@@ -14,6 +15,8 @@ class WaterHeaterModule(QtCore.QObject):
     self.onRequestParam    = (None, None)
     self.offRequestParam   = (None, None)
     self.updateTimer       = QtCore.QTimer()
+    self.consumers         = {}
+    self.queue             = _parent.getDataRetrievingManager().getQueue()
     
   def init(self):
     self.autoControlWindow.init()
@@ -107,24 +110,24 @@ class WaterHeaterModule(QtCore.QObject):
     if (QtCore.QDateTime.currentDateTime().__ge__(self.onTime) ):
       self.switchOnCommand()
       self.onTime = self.onTime.addDays(1)
-      print("ON !!!!")
+      print("WaterHeaterModule: ON !!!!")
     elif (QtCore.QDateTime.currentDateTime().__ge__(self.offTime) ):
       self.switchOffCommand()
       self.offTime = self.offTime.addDays(1)
-      print("OFF !!!")
+      print("WaterHeaterModule: OFF !!!")
+
+    self.queue.put((-1, "next_switch_on_date", self.onTime.toString("hh:mm:ss dd/MM/yyyy")))
+    self.queue.put((-1, "next_switch_off_date", self.offTime.toString("hh:mm:ss dd/MM/yyyy")))
 
   def switchOnCommand(self): 
     url  = self.onRequestParam[0]
     body = self.onRequestParam[1]
-    self.httpHandler.post(url, body, self.processReply)
+    self.httpHandler.post(url, body, None)
 
   def switchOffCommand(self):
     url  = self.offRequestParam[0]
     body = self.offRequestParam[1]
-    self.httpHandler.post(url, body, self.processReply)
-    
-  def processReply(self, reply):
-    pass
+    self.httpHandler.post(url, body, None)
     
   def getSwitchOnTime(self):
     return self.onTime
