@@ -13,10 +13,13 @@ class WaterHeaterModule(QtCore.QObject):
     self.autoCtrlEnabled   = True
     self.onRequestParam    = (None, None)
     self.offRequestParam   = (None, None)
+    self.updateTimer       = QtCore.QTimer()
     
   def init(self):
     self.autoControlWindow.init()
-    
+    QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.processRequest)
+    self.updateTimer.start(1000)
+
   def getName(self):
     return "water_heater"
     

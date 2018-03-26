@@ -30,7 +30,8 @@ class Versatyle(QtGui.QWidget):
     self.registerModule(self.waterHeaterModule)
     
     self.loadXMLConfiguration()
-    self.setupGUI()
+    self.setWindowTitle("Versatyle")
+    self.setFixedSize(QtCore.QSize(800, 480))
     self.placeWidgets()
     
     self.dataRetrievingManager.init()
@@ -102,10 +103,7 @@ class Versatyle(QtGui.QWidget):
     stream = QtCore.QTextStream(outFile)
     stream << doc.toString()
     outFile.close()
-    
-  def setupGUI(self):
-    self.setFixedSize(QtCore.QSize(800, 480))
-                           
+                  
   def openCfgGeneralWindow(self):
     self.generalConfigManager.show()
     
@@ -133,13 +131,6 @@ class Versatyle(QtGui.QWidget):
                            QtCore.SIGNAL("clicked()"), 
                            self.nextPage)
     self.navRightButton.move(750, 60)
-
-    self.updateTimer = QtCore.QTimer()
-    QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.updateModule)
-    self.updateTimer.start(1000)
-    
-  def updateModule(self):
-    self.waterHeaterModule.processRequest()
     
   def nextPage(self):
     if self.currentPageIndex >= len(self.pagesList)-1:

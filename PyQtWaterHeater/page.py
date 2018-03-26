@@ -1,5 +1,4 @@
-﻿from PySide import QtGui
-import string_value_widget
+﻿import string_value_widget
 import button_widget
 import label_widget
 import image_widget
