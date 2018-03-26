@@ -37,7 +37,7 @@ class Versatyle(QtGui.QWidget):
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
-    file = QtCore.QFile("config.xml")
+    file = QtCore.QFile("config/config.xml")
     if not file.open(QtCore.QIODevice.ReadOnly):
       return
     if not doc.setContent(file):
@@ -98,7 +98,7 @@ class Versatyle(QtGui.QWidget):
     rootNode.appendChild(onOffParamNode)
     doc.appendChild(rootNode)
     
-    outFile = QtCore.QFile("config.xml")
+    outFile = QtCore.QFile("config/config.xml")
     if not outFile.open(QtCore.QIODevice.WriteOnly | QtCore.QIODevice.Text ):
       print("Failed to open file for writing.")
       return

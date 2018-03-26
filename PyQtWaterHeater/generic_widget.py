@@ -1,10 +1,10 @@
 ﻿
 class GenericWidget(object):
   def __init__(self):
-    self._x      = 0
-    self._y      = 0
-    self._width  = 50
-    self._height = 50
+    self._x         = 0
+    self._y         = 0
+    self._width     = 50
+    self._height    = 50
     self.fontSize   = 12
     self.fontColor  = "#000000"
     self.fontWeight = "normal"
@@ -34,17 +34,16 @@ class GenericWidget(object):
     print("NEED TO WRITE FUNCTION")
     
   def loadXMLGeometry(self, element):
-    self._x      = int(element.attribute("x", "0"))
-    self._y      = int(element.attribute("y", "0"))
-    self._width  = int(element.attribute("width", "50"))
+    self._x      = int(element.attribute("x",      "0"))
+    self._y      = int(element.attribute("y",      "0"))
+    self._width  = int(element.attribute("width",  "50"))
     self._height = int(element.attribute("height", "50"))
     
   def loadXMLFont(self, element):
     self.fontSize   = int(element.attribute("size", "12"))
-    self.fontColor  = element.attribute("color", "#000000")
+    self.fontColor  = element.attribute("color",  "#000000")
     self.fontWeight = element.attribute("weight", "normal")
-    self.fontName   = element.attribute("name", "arial")
-    
+    self.fontName   = element.attribute("name",   "arial")
     
   def loadXMLBackground(self, element):
     self.bgColor = element.attribute("color", "#000000")
@@ -61,4 +60,3 @@ class GenericWidget(object):
     
   def getHeight(self):
     return self._height
-    
