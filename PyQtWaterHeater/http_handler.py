@@ -8,15 +8,6 @@ else:
 class HTTPHandler():
   def __init__(self):
     pass
-
-  def setupGUI(self):
-    pass
-      
-  def getSwitchOnParameters(self):
-    return self.onRequestParam
-    
-  def getSwitchOffParameters(self):
-    return self.offRequestParam
     
   def post(self, urlPath, data, replyCallback):
     try:
@@ -30,7 +21,7 @@ class HTTPHandler():
         response = urllib.request.urlopen(request)
         #print(response.read())
     except:
-      print("Error:", sys.exc_info()[0])
+      print("HTTPHandler:", sys.exc_info())
       
   def get(self, urlPath):
     try:
@@ -45,5 +36,5 @@ class HTTPHandler():
         response.close()
         return json
     except:
-      print("Error:", sys.exc_info()[0])
+      print("HTTPHandler:", sys.exc_info()[0])
       return None
