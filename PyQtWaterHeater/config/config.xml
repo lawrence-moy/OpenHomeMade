@@ -84,6 +84,11 @@
        <Font weight="bold" />
        <Value moduleId="1" variable="io10" />
      </Widget> 
+     <Widget type="image_value">
+       <Geometry x="390" y="295" width="11" height="84" />
+       <Image path="images/resistance_on.gif" onValue="1" />
+       <Value moduleId="1" variable="io10" />
+     </Widget>
    </Page>
 
    <Page title="History" backgroundImage="images/background.jpg">

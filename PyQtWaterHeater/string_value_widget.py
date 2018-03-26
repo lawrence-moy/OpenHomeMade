@@ -6,6 +6,7 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
   def __init__(self, dataRetrievingManager):
     QtGui.QLabel.__init__(self)
     generic_widget.GenericWidget.__init__(self)
+    self.moduleId              = None
     self.variableName          = ""
     self.dataRetrievingManager = dataRetrievingManager
     

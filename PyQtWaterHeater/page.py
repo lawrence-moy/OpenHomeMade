@@ -4,6 +4,7 @@ import label_widget
 import image_widget
 import date_widget
 import page_title_widget
+import image_value_widget
 
 class Page():
   def __init__(self, parent):
@@ -37,6 +38,8 @@ class Page():
             widget = label_widget.LabelWidget()
           elif "image" == type:
             widget = image_widget.ImageWidget()
+          elif "image_value" == type:
+            widget = image_value_widget.ImageValueWidget(self.parent.getDataRetrievingManager())
           elif "value" == type:
             widget = string_value_widget.StringValueWidget(self.parent.getDataRetrievingManager())
           elif "button" == type:
