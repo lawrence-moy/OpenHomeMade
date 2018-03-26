@@ -10,7 +10,7 @@ I propose you a first example of its capabilities, with a configuration to manag
 
 ![Versatyle](https://raw.githubusercontent.com/lawrence-moy/Versatyle/master/PyQtWaterHeater/screenshot/capture1.png)
 
-Versatyle requires somme dependances to run:
-- Python 3.x interpreter (Work fine with a python 2.7 but I recommand you a 3.x for future).
+Versatyle requires some dependances to run:
+- Python 3.x interpreter (Work well with a python 2.7 but I recommand you a 3.x for future).
 - PySide (Python bindings for the Qt 4).
 
