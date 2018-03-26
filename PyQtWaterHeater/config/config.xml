@@ -26,31 +26,33 @@
        <Geometry x="90" y="120" width="150" height="30" />
        <Font size="12" />
        <Text value="Power supply:"/>
+       
      </Widget>
      <Widget type="value">
        <Geometry x="240" y="120" width="55"  height="30" />
        <Font weight="bold" />
        <Value moduleId="1" variable="io10" />
+       <Background color="#ff00ff" alpha="30" />
      </Widget>    
      <Widget type="label">
        <Geometry x="90" y="155" width="205" height="30" />
        <Font size="12" />
        <Text value="Next switch ON:"/>
      </Widget>
-     <Widget type="label">
+     <Widget type="value">
        <Geometry x="90" y="185" width="205" height="30" />
        <Font size="12" />
-       <Text value="-- -- --"/>
+       <Background color="#ff00ff" alpha="30" />
      </Widget>
      <Widget type="label">
        <Geometry x="90" y="220" width="205" height="30" />
        <Font size="12" />
        <Text value="Next switch OFF:"/>
      </Widget>
-     <Widget type="label">
+     <Widget type="value">
        <Geometry x="90" y="250" width="205" height="30" />
        <Font size="12" />
-       <Text value="-- -- --"/>
+       <Background color="#ff00ff" alpha="30" />
      </Widget>
      <Widget type="image">
        <Geometry x="90" y="300" width="202" height="24" />
@@ -65,6 +67,7 @@
        <Geometry x="240" y="330" width="55"  height="30" />
        <Font weight="bold" />
        <Value moduleId="1" variable="io10" />
+       <Background color="#ff00ff" alpha="30" />
      </Widget>
      <Widget type="image">
        <Geometry x="300" y="50" width="300" height="400" />
@@ -83,6 +86,7 @@
        <Geometry x="670" y="330" width="55" height="30" />
        <Font weight="bold" />
        <Value moduleId="1" variable="io10" />
+       <Background color="#ff00ff" alpha="30" />
      </Widget> 
      <Widget type="image_value">
        <Geometry x="390" y="295" width="11" height="84" />

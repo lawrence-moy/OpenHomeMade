@@ -10,6 +10,7 @@ class GenericWidget(object):
     self.fontWeight = "normal"
     self.fontName   = "arial"
     self.bgColor    = "#FFFFFF"
+    self.bgAlpha    = 255
     self.bgImage    = ""
     
   def init(self):
@@ -47,6 +48,7 @@ class GenericWidget(object):
     
   def loadXMLBackground(self, element):
     self.bgColor = element.attribute("color", "#000000")
+    self.bgAlpha = int(element.attribute("alpha", "255"))
     self.bgImage = element.attribute("image", "")
     
   def getX(self):

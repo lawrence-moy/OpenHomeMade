@@ -33,7 +33,11 @@ class StringValueWidget(QtGui.QLabel, generic_widget.GenericWidget):
     self.setText(str(value))
     
   def paintEvent(self, event):
-    super(StringValueWidget, self).paintEvent(event)
     qpainter = QtGui.QPainter(self)
-    qpainter.drawRoundedRect(0, 0, self.width()-1, self.height()-1, 3, 3)
+    color = QtGui.QColor(self.bgColor)
+    color.setAlpha(self.bgAlpha)
+    brush = QtGui.QBrush(color)
+    qpainter.fillRect(0, 0, self.width(), self.height(), brush)
+    super(StringValueWidget, self).paintEvent(event)
+
     

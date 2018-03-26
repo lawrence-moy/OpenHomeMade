@@ -19,10 +19,10 @@ class LabelWidget(QtGui.QLabel, generic_widget.GenericWidget):
     
   def loadXMLSpecificElement(self, element):
     if "Text" == element.tagName():
-      self.setText(element.attribute("text", ""))
+      self.setText(element.attribute("value", ""))
       
   def paintEvent(self, event):
-    super(LabelWidget, self).paintEvent(event)
     p = QtGui.QPainter(self)
-    p.drawRoundedRect(0, 0, self.width()-1, self.height()-1, 3, 3)
+    p.drawRoundedRect(0, 0, self.width()+1, self.height()+1, 3, 3)
+    super(LabelWidget, self).paintEvent(event)
     
