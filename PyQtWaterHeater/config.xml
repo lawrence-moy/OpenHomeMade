@@ -12,45 +12,133 @@
  <AutoControlParameters duration="03:01" hour="20:14" enabled="True"/>
  <Pages>
    <Page title="General" backgroundImage="images/background2.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     
-     <Widget type="image" path="images/resistance_title.png" x="90" y="90" width="202" height="24" />
-     <Widget type="label" text="Power supply :"    x="90" y="120" width="150" height="30" fontSize="12" />
-     <Widget type="value" moduleId="1" variable="io10"          x="240" y="120" width="55"  height="30" fontWeight="bold" />
-     <Widget type="label" text="Next switch ON :"  x="90" y="155" width="205" height="30" fontSize="12" />
-     <Widget type="label" text=" -- -- --"  x="90" y="185" width="205" height="30" fontSize="12" />
-     <Widget type="label" text="Next switch OFF :"  x="90" y="220" width="205" height="30" fontSize="12" />
-     <Widget type="label" text=" -- -- --"  x="90" y="250" width="205" height="30" fontSize="12" />
-     
-     <Widget type="image" path="images/heat_water_title.png" x="90" y="300" width="202" height="24" />
-     <Widget type="label" text="Water temperature :" x="90" y="330" width="150" height="30" fontSize="12" />
-     <Widget type="value" moduleId="1" variable="io10"          x="240" y="330" width="55"  height="30" fontWeight="bold" />
-  
-     <Widget type="image" path="images/water_heater.png"  x="300" y="50" width="300" height="400" />
-     
-     <Widget type="image" path="images/cold_water_title.png" x="520" y="300" width="202" height="24" />
-     <Widget type="label" text="Water temperature :" x="520" y="330" width="150" height="30" fontSize="12" />
-     <Widget type="value" moduleId="1" variable="io10"          x="670" y="330" width="55"  height="30" fontWeight="bold" />
+     <Widget type="page_title">
+       <Geometry x="0" y="0" width="600" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+     </Widget>
+     <Widget type="date">
+       <Geometry x="595" y="0" width="205" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+       <Date format="hh:mm:ss"/>
+     </Widget>
+     <Widget type="image">
+       <Geometry x="90" y="90" width="202" height="24" />
+       <Image path="images/resistance_title.png"/>
+     </Widget>
+     <Widget type="label">
+       <Geometry x="90" y="120" width="150" height="30" />
+       <Font size="12" />
+       <Text value="Power supply:"/>
+     </Widget>
+     <Widget type="value">
+       <Geometry x="240" y="120" width="55"  height="30" />
+       <Font weight="bold" />
+       <Value moduleId="1" variable="io10" />
+     </Widget>    
+     <Widget type="label">
+       <Geometry x="90" y="155" width="205" height="30" />
+       <Font size="12" />
+       <Text value="Next switch ON:"/>
+     </Widget>
+     <Widget type="label">
+       <Geometry x="90" y="185" width="205" height="30" />
+       <Font size="12" />
+       <Text value="-- -- --"/>
+     </Widget>
+     <Widget type="label">
+       <Geometry x="90" y="220" width="205" height="30" />
+       <Font size="12" />
+       <Text value="Next switch OFF:"/>
+     </Widget>
+     <Widget type="label">
+       <Geometry x="90" y="250" width="205" height="30" />
+       <Font size="12" />
+       <Text value="-- -- --"/>
+     </Widget>
+     <Widget type="image">
+       <Geometry x="90" y="300" width="202" height="24" />
+       <Image path="images/heat_water_title.png"/>
+     </Widget>
+     <Widget type="label">
+       <Geometry x="90" y="330" width="150" height="30" />
+       <Font size="12" />
+       <Text value="Water temperature:"/>
+     </Widget>
+     <Widget type="value">
+       <Geometry x="240" y="330" width="55"  height="30" />
+       <Font weight="bold" />
+       <Value moduleId="1" variable="io10" />
+     </Widget>
+     <Widget type="image">
+       <Geometry x="300" y="50" width="300" height="400" />
+       <Image path="images/water_heater.png" />
+     </Widget>
+     <Widget type="image">
+       <Geometry x="520" y="300" width="202" height="24" />
+       <Image path="images/cold_water_title.png" />
+     </Widget>
+     <Widget type="label">
+       <Geometry x="520" y="330" width="150" height="30" />
+       <Font size="12" />
+       <Text value="Water temperature:"/>
+     </Widget>
+     <Widget type="value">
+       <Geometry x="670" y="330" width="55" height="30" />
+       <Font weight="bold" />
+       <Value moduleId="1" variable="io10" />
+     </Widget> 
    </Page>
+
    <Page title="History" backgroundImage="images/background.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     
+     <Widget type="page_title">
+       <Geometry x="0" y="0" width="600" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+     </Widget>
+     <Widget type="date">
+       <Geometry x="595" y="0" width="205" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+       <Date format="hh:mm:ss"/>
+     </Widget>
    </Page>
+   
    <Page title="Configuration" backgroundImage="images/background.jpg">
-     <Widget type="page_title"                     x="0"   y="0"   width="600" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     <Widget type="date"                           x="595" y="0"   width="205" height="55" fontWeight="bold" fontColor="white" fontSize="30" bgImage="images/bg_title.jpg"/>
-     <Widget type="button" text="Force ON" x="80" y="80" width="300" height="100" fontSize="30">
+     <Widget type="page_title">
+       <Geometry x="0" y="0" width="600" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+     </Widget>
+     <Widget type="date">
+       <Geometry x="595" y="0" width="205" height="55" />
+       <Font weight="bold" color="white" size="30" />
+       <Background image="images/bg_title.jpg" />
+       <Date format="hh:mm:ss"/>
+     </Widget>
+     <Widget type="button">
+       <Geometry x="80" y="80" width="300" height="100" />
+       <Font size="30" />
+       <Text value="Force ON"/>
        <HTTPPostRequest body="[{'ref':1, 'set_output10':1}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>
-     <Widget type="button" text="Force OFF" x="420" y="80" width="300" height="100" fontSize="30">
+     <Widget type="button">
+       <Geometry x="420" y="80" width="300" height="100" />
+       <Font size="30" />
+       <Text value="Force OFF"/>
        <HTTPPostRequest body="[{'ref':1, 'set_output10':0}]" url="http://192.168.200.99/gtc/appareils.json"/>
      </Widget>
-     <Widget type="button" text="AUTO ON/OFF" x="80" y="200" width="300" height="100" fontSize="30">
+     <Widget type="button">
+       <Geometry x="80" y="200" width="300" height="100" />
+       <Font size="30" />
+       <Text value="AUTO ON/OFF"/>
        <ModuleEvent module="water_heater" event="config_dialog" />
      </Widget>
-     <Widget type="button" text="Config general" x="420" y="200" width="300" height="100" fontSize="30">
+     <Widget type="button"  fontSize="30">
+       <Geometry x="420" y="200" width="300" height="100" />
+       <Font size="30" />
+       <Text value="Config general"/>
        <ModuleEvent module="general" event="config_dialog" />
      </Widget>
    </Page>

@@ -11,15 +11,16 @@ class LabelWidget(QtGui.QLabel, generic_widget.GenericWidget):
     self.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
   def loadXMLConfiguration(self, element):
-    super(LabelWidget, self).loadXMLConfiguration(element)
-    self.setText(element.attribute("text", ""))
+    super(LabelWidget, self).loadXMLConfiguration(self, element)
     font = self.font()
-    font.setPointSize(int(element.attribute("fontSize", "12")))
+    font.setPointSize(self.fontSize)
     self.setFont(font)
-    fontColor  = element.attribute("fontColor", "#000000")
-    fontWeight = element.attribute("fontWeight", "normal")
-    self.setStyleSheet("font-weight: " + fontWeight + "; color: " + fontColor)
+    self.setStyleSheet("font-weight: " + self.fontWeight + "; color: " + self.fontColor)
     
+  def loadXMLSpecificElement(self, element):
+    if "Text" == element.tagName():
+      self.setText(element.attribute("text", ""))
+      
   def paintEvent(self, event):
     super(LabelWidget, self).paintEvent(event)
     p = QtGui.QPainter(self)

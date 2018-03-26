@@ -8,11 +8,14 @@ class ImageWidget(QtGui.QLabel, generic_widget.GenericWidget):
     generic_widget.GenericWidget.__init__(self)
 
   def loadXMLConfiguration(self, element):
-    super(ImageWidget, self).loadXMLConfiguration(element)
-    path   = element.attribute("path", "")
-    pixmap = QtGui.QPixmap(path)
-    self.setPixmap(pixmap)
+    super(ImageWidget, self).loadXMLConfiguration(self, element)
     
+  def loadXMLSpecificElement(self, element):
+    if "Image" == element.tagName():
+      path   = element.attribute("path", "")
+      pixmap = QtGui.QPixmap(path)
+      self.setPixmap(pixmap)
+      
   def paintEvent(self, event):
     super(ImageWidget, self).paintEvent(event)
     #p = QtGui.QPainter(self)

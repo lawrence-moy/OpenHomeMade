@@ -17,15 +17,15 @@ class DateWidget(QtGui.QLabel, generic_widget.GenericWidget):
     self.updateTimer.start(1000)
 
   def loadXMLConfiguration(self, element):
-    super(DateWidget, self).loadXMLConfiguration(element)
-    self.format = element.attribute("format", "hh:mm:ss")
+    super(DateWidget, self).loadXMLConfiguration(self, element)
     font = self.font()
-    font.setPointSize(int(element.attribute("fontSize", "12")))
+    font.setPointSize(self.fontSize)
     self.setFont(font)
-    fontColor  = element.attribute("fontColor", "#000000")
-    fontWeight = element.attribute("fontWeight", "normal")
-    self.setStyleSheet("font-weight: " + fontWeight + "; color: " + fontColor)
-    self.bgImage = element.attribute("bgImage", "")
+    self.setStyleSheet("font-weight: " + self.fontWeight + "; color: " + self.fontColor)
+    
+  def loadXMLSpecificElement(self, element):
+    if "Date" == element.tagName():
+      self.format = element.attribute("format", "hh:mm:ss")
     
   def updateDate(self):
     self.setText(QtCore.QDateTime.currentDateTime().toString(self.format))

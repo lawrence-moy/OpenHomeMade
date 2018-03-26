@@ -16,35 +16,29 @@ class ButtonWidget(QtGui.QPushButton, generic_widget.GenericWidget):
                            self.clickedEvent)
     
   def loadXMLConfiguration(self, element):
-    super(ButtonWidget, self).loadXMLConfiguration(element)
-    self.setText(element.attribute("text", ""))
+    super(ButtonWidget, self).loadXMLConfiguration(self, element)
     font = self.font()
-    font.setPointSize(int(element.attribute("fontSize", "12")))
+    font.setPointSize(self.fontSize)
     self.setFont(font)
-    
-    fontColor  = element.attribute("fontColor", "#000000")
-    fontWeight = element.attribute("fontWeight", "normal")
-    self.setStyleSheet("font-weight: " + fontWeight + "; color: " + fontColor)
-    
-    requestNode = element.firstChild()
-    while not requestNode.isNull():
-      eventElement = requestNode.toElement()
-      if not eventElement.isNull():
-        if "HTTPPostRequest" == eventElement.tagName():
-          url  = eventElement.attribute("url", "")
-          body = eventElement.attribute("body", "")
-          self.requestList.append((url, body))
-        elif "ModuleEvent" == eventElement.tagName():
-          moduleName = eventElement.attribute("module", "")
-          event      = eventElement.attribute("event", "")
-          module = self.parent.getModule(moduleName)
-          if None != module:
-            callback = module.getCallback(event)
-            QtCore.QObject.connect(self, 
-                                   QtCore.SIGNAL("clicked()"), 
-                                   callback)
-      requestNode = requestNode.nextSibling()
-    
+    self.setStyleSheet("font-weight: " + self.fontWeight + "; color: " + self.fontColor)
+      
+  def loadXMLSpecificElement(self, element):
+    if "Text" == element.tagName():
+      self.setText(element.attribute("value", ""))
+    elif "HTTPPostRequest" == element.tagName():
+      url  = element.attribute("url", "")
+      body = element.attribute("body", "")
+      self.requestList.append((url, body))
+    elif "ModuleEvent" == element.tagName():
+      moduleName = element.attribute("module", "")
+      event      = element.attribute("event", "")
+      module = self.parent.getModule(moduleName)
+      if None != module:
+        callback = module.getCallback(event)
+        QtCore.QObject.connect(self, 
+                               QtCore.SIGNAL("clicked()"), 
+                               callback)
+                               
   def clickedEvent(self):
     for request in self.requestList:
       url, body = request
