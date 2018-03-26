@@ -26,6 +26,7 @@ class Versatyle(QtGui.QWidget):
     self.registerModule(self.generalConfigManager)
     
     self.waterHeaterModule.init()
+    self.waterHeaterModule.loadXMLConfiguration()
     self.registerModule(self.waterHeaterModule)
     
     self.loadXMLConfiguration()
@@ -54,13 +55,9 @@ class Versatyle(QtGui.QWidget):
           while not subNetworkNode.isNull():
             subElement = subNetworkNode.toElement()
             if not subElement.isNull():
-              if "Commands" == subElement.tagName():
-                self.httpHandler.parseXMLParameters(subElement)
-              elif "DataRetrieving" == subElement.tagName():
+              if "DataRetrieving" == subElement.tagName():
                 self.dataRetrievingManager.parseXMLParameters(subElement)
             subNetworkNode = subNetworkNode.nextSibling()
-        elif ("AutoControlParameters" == element.tagName()):
-          self.waterHeaterModule.parseXMLParameters(element)
         elif ("Pages" == element.tagName()):
           self.loadPages(element)
       mainNode = mainNode.nextSibling()

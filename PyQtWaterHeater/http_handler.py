@@ -7,38 +7,10 @@ else:
 
 class HTTPHandler():
   def __init__(self):
-    self.onRequestParam   = (None, None)
-    self.offRequestParam  = (None, None)
+    pass
 
   def setupGUI(self):
     pass
-    
-  def getXMLConfiguration(self, doc):
-    networkNode    = doc.createElement("Network")
-    onRequestNode  = doc.createElement("OnRequest")
-    onRequestNode.setAttribute("url",  self.onRequestParam[0])
-    onRequestNode.setAttribute("body", self.onRequestParam[1])
-    offRequestNode = doc.createElement("OffRequest")
-    offRequestNode.setAttribute("url",  self.offRequestParam[0])
-    offRequestNode.setAttribute("body", self.offRequestParam[1])
-    networkNode.appendChild(onRequestNode)
-    networkNode.appendChild(offRequestNode)
-    return networkNode
-
-  def parseXMLParameters(self, element):
-    subNetworkNode = element.firstChild()
-    while not subNetworkNode.isNull():
-      subNetworkElement = subNetworkNode.toElement()
-      if not subNetworkElement.isNull():
-        if "OnRequest" == subNetworkElement.tagName():
-           urlOn = subNetworkElement.attribute("url", "")
-           bodyOn = subNetworkElement.attribute("body", "")
-           self.onRequestParam = (urlOn, bodyOn)
-        elif "OffRequest" == subNetworkElement.tagName():
-           urlOff  = subNetworkElement.attribute("url", "")
-           bodyOff = subNetworkElement.attribute("body", "")
-           self.offRequestParam = (urlOff, bodyOff)
-      subNetworkNode = subNetworkNode.nextSibling()
       
   def getSwitchOnParameters(self):
     return self.onRequestParam
