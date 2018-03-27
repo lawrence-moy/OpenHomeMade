@@ -14,7 +14,7 @@ class DateWidget(QtGui.QLabel, generic_widget.GenericWidget):
     self.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
     self.updateDate()
     QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL("timeout()"), self.updateDate)
-    self.updateTimer.start(1000)
+    self.updateTimer.start(500)
 
   def loadXMLConfiguration(self, element):
     super(DateWidget, self).loadXMLConfiguration(self, element)
