@@ -2,7 +2,7 @@
 from PySide import QtCore
 from PySide import QtXml
 import water_heater_module
-import general_config_manager
+import general_config_window
 import data_retrieving_manager
 import http_handler
 import page
@@ -10,23 +10,21 @@ import page
 class Versatyle(QtGui.QWidget):
   def __init__(self):
     QtGui.QWidget.__init__(self)
-    self.navRightButton        = QtGui.QPushButton(u"\u25b6", self)
-    self.navLeftButton         = QtGui.QPushButton(u"\u25c0", self)
     self.httpHandler           = http_handler.HTTPHandler()
     self.dataRetrievingManager = data_retrieving_manager.DataRetrievingManager(self)
     self.waterHeaterModule     = water_heater_module.WaterHeaterModule(self)
-    self.generalConfigManager  = general_config_manager.GeneralConfigManager(self)
+    self.generalConfigWindow   = general_config_window.GeneralConfigWindow(self)
     self.modulesDict           = {}
     self.pagesList             = []
     self.pageTitleConsumers    = []
     self.currentPageIndex      = 0
-    
+
   def init(self):
     self.dataRetrievingManager.init()
     self.dataRetrievingManager.start()
   
-    self.generalConfigManager.init()
-    self.registerModule(self.generalConfigManager)
+    self.generalConfigWindow.init()
+    self.modulesDict["general"] = self
     
     self.waterHeaterModule.init()
     self.waterHeaterModule.loadXMLConfiguration()
@@ -35,7 +33,6 @@ class Versatyle(QtGui.QWidget):
     self.loadXMLConfiguration()
     self.setWindowTitle("Versatyle")
     self.setFixedSize(QtCore.QSize(800, 480))
-    self.placeWidgets()
 
   def loadXMLConfiguration(self):
     doc = QtXml.QDomDocument("configuration")
@@ -70,6 +67,14 @@ class Versatyle(QtGui.QWidget):
   def getModule(self, name):
     return self.modulesDict.get(name)
     
+  def getCallback(self, name):
+    if "next_page" == name:
+      return self.nextPage
+    elif "previous_page" == name:
+      return self.previousPage
+    elif "config_dialog" == name:
+      return self.generalConfigWindow._show
+      
   def registerPageTitleConsumer(self, widget):
     self.pageTitleConsumers.append(widget)
       
@@ -83,6 +88,10 @@ class Versatyle(QtGui.QWidget):
           newPage = page.Page(self)
           newPage.loadXMLConfiguration(pageElement)
           self.pagesList.append(newPage)
+        elif "CommonWidgets" == pageElement.tagName():
+          newPage = page.Page(self)
+          newPage.loadXMLConfiguration(pageElement)
+          newPage.show()
       pageNode = pageNode.nextSibling()
     self.processPageChanged()
     
@@ -108,25 +117,6 @@ class Versatyle(QtGui.QWidget):
     
   def getDataRetrievingManager(self):
     return self.dataRetrievingManager
-  
-  def placeWidgets(self):
-    self.navLeftButton.setFixedSize(45, 400)
-    arrowFont = QtGui.QFont(self.navLeftButton.font())
-    arrowFont.setPointSize(50)
-    self.navLeftButton.setFont(arrowFont)
-    QtCore.QObject.connect(self.navLeftButton, 
-                           QtCore.SIGNAL("clicked()"), 
-                           self.previousPage)
-    self.navLeftButton.move(5, 60)
-
-    self.navRightButton.setFixedSize(45, 400)
-    arrowFont = QtGui.QFont(self.navRightButton.font())
-    arrowFont.setPointSize(50)
-    self.navRightButton.setFont(arrowFont)
-    QtCore.QObject.connect(self.navRightButton, 
-                           QtCore.SIGNAL("clicked()"), 
-                           self.nextPage)
-    self.navRightButton.move(750, 60)
     
   def nextPage(self):
     if self.currentPageIndex >= len(self.pagesList)-1:

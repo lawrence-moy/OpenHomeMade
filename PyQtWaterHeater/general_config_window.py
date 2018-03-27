@@ -2,9 +2,8 @@
 from PySide import QtCore
 
 class GeneralConfigWindow(QtGui.QDialog):
-  def __init__(self, _parent, generalConfigManager):
+  def __init__(self, _parent):
     QtGui.QDialog.__init__(self, parent=_parent)
-    self.generalConfigManager  = generalConfigManager
     self.gridLayout       = QtGui.QGridLayout()
     self.fullscreenMode   = QtGui.QPushButton("Fullscreen mode")
     self.labelFontSize    = 25
@@ -14,6 +13,7 @@ class GeneralConfigWindow(QtGui.QDialog):
   def init(self):
     self.setupGUI()
     self.placeWidgets()
+    self.hide()
     
   def setupGUI(self):
     labelFont = QtGui.QFont(self.fullscreenMode.font())

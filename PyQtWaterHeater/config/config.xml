@@ -6,7 +6,7 @@
   </DataRetrieving>
  </Network>
  <Pages>
-   <Page title="General" backgroundImage="images/background2.jpg">
+   <CommonWidgets>
      <Widget type="page_title">
        <Geometry x="0" y="0" width="600" height="55" />
        <Font weight="bold" color="white" size="30" />
@@ -18,6 +18,21 @@
        <Background image="images/bg_title.jpg" />
        <Date format="hh:mm:ss"/>
      </Widget>
+     <Widget type="button">
+       <Geometry x="5" y="60" width="45" height="400" />
+       <Font size="50" />
+       <Text value="&lt;" />
+       <ModuleEvent module="general" event="previous_page" />
+     </Widget>
+     <Widget type="button">
+       <Geometry x="750" y="60" width="45" height="400" />
+       <Font size="50" />
+       <Text value="&gt;" />
+       <ModuleEvent module="general" event="next_page" />
+     </Widget>
+   </CommonWidgets>
+   
+   <Page title="General" backgroundImage="images/background2.jpg">
      <Widget type="image">
        <Geometry x="90" y="90" width="202" height="24" />
        <Image path="images/resistance_title.png"/>
@@ -26,7 +41,6 @@
        <Geometry x="90" y="120" width="150" height="30" />
        <Font size="12" />
        <Text value="Power supply:"/>
-       
      </Widget>
      <Widget type="value">
        <Geometry x="240" y="120" width="55"  height="30" />
@@ -98,31 +112,9 @@
    </Page>
 
    <Page title="History" backgroundImage="images/background.jpg">
-     <Widget type="page_title">
-       <Geometry x="0" y="0" width="600" height="55" />
-       <Font weight="bold" color="white" size="30" />
-       <Background image="images/bg_title.jpg" />
-     </Widget>
-     <Widget type="date">
-       <Geometry x="595" y="0" width="205" height="55" />
-       <Font weight="bold" color="white" size="30" />
-       <Background image="images/bg_title.jpg" />
-       <Date format="hh:mm:ss"/>
-     </Widget>
    </Page>
    
    <Page title="Configuration" backgroundImage="images/background.jpg">
-     <Widget type="page_title">
-       <Geometry x="0" y="0" width="600" height="55" />
-       <Font weight="bold" color="white" size="30" />
-       <Background image="images/bg_title.jpg" />
-     </Widget>
-     <Widget type="date">
-       <Geometry x="595" y="0" width="205" height="55" />
-       <Font weight="bold" color="white" size="30" />
-       <Background image="images/bg_title.jpg" />
-       <Date format="hh:mm:ss"/>
-     </Widget>
      <Widget type="button">
        <Geometry x="80" y="80" width="300" height="100" />
        <Font size="30" />
