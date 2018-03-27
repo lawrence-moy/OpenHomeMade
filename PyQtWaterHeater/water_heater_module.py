@@ -107,17 +107,17 @@ class WaterHeaterModule(QtCore.QObject):
   def processRequest(self):
     if False == self.autoCtrlEnabled:
       return
-    if (QtCore.QDateTime.currentDateTime().__ge__(self.onTime) ):
+    if QtCore.QDateTime.currentDateTime().__ge__(self.onTime):
       self.switchOnCommand()
       self.onTime = self.onTime.addDays(1)
       print("WaterHeaterModule: ON !!!!")
-    elif (QtCore.QDateTime.currentDateTime().__ge__(self.offTime) ):
+    elif QtCore.QDateTime.currentDateTime().__ge__(self.offTime):
       self.switchOffCommand()
       self.offTime = self.offTime.addDays(1)
       print("WaterHeaterModule: OFF !!!")
 
-    self.queue.put((-1, "next_switch_on_date", self.onTime.toString("hh:mm:ss dd/MM/yyyy")))
-    self.queue.put((-1, "next_switch_off_date", self.offTime.toString("hh:mm:ss dd/MM/yyyy")))
+    self.queue.put((-1, "next_switch_on_date", self.onTime.toString("hh:mm dd/MM/yyyy")))
+    self.queue.put((-1, "next_switch_off_date", self.offTime.toString("hh:mm dd/MM/yyyy")))
 
   def switchOnCommand(self): 
     url  = self.onRequestParam[0]
