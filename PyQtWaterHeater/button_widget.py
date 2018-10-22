@@ -20,7 +20,11 @@ class ButtonWidget(QtGui.QPushButton, generic_widget.GenericWidget):
     font = self.font()
     font.setPointSize(self.fontSize)
     self.setFont(font)
-    self.setStyleSheet("font-weight: " + self.fontWeight + "; color: " + self.fontColor)
+    self.setStyleSheet("font-weight: " + self.fontWeight + 
+                       "; color: " + self.fontColor + 
+                       "; border-style: outset; border-width: 0px; border-radius: 10px;" +
+                       "; background-color: " + self.bgColor)
+    #border-color: beige;
       
   def loadXMLSpecificElement(self, element):
     if "Text" == element.tagName():
